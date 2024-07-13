@@ -1,34 +1,25 @@
 import '~/assets/css/util.css';
 import 'react-toastify/dist/ReactToastify.css';
 import classNames from 'classnames/bind';
-import styles from './Login.module.scss'
-import image from '~/assets/images/img-01.png'
-
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
+import styles from './Login.module.scss'
+import image from '~/assets/images/img-01.png'
+import config from '~/router/config-router'
 
 const cx = classNames.bind(styles)
 
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    // const navigate = useNavigate();
+    const navigate = useNavigate();
 
     const handleLogin = () => {
 
         if (username === "admin" && password === "12345") {
-            toast.success('Đăng nhập thành công!', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-            // navigate(config.routes.home);
+            navigate(config.home);
         } else {
             toast.error('Tên đăng nhập hoặc mật khẩu không đúng', {
                 position: "top-right",
