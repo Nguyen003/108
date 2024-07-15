@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import classNames from 'classnames/bind';
 import styles from './Sidebar.module.scss'
+import config from '~/router/config-router'
 
 const cx = classNames.bind(styles);
 
@@ -16,7 +17,7 @@ function Sidebar() {
             <aside className={cx('sidebar-nav')}>
                 <nav>
                     <NavLink
-                        to="#"
+                        to={config.home}
                         className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
                     >
                         <i className="fas fa-tachometer-alt"></i>
@@ -25,11 +26,11 @@ function Sidebar() {
                 </nav>
                 <nav>
                     <NavLink
-                        to="/tesst"
+                        to={config.location}
                         className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
                     >
                         <i className="fas fa-user"></i>
-                        <span className={cx('title')}>Giám sát hệ thống</span>
+                        <span className={cx('title')}>Bản đồ</span>
                     </NavLink>
                 </nav>
             </aside>

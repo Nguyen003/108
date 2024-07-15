@@ -1,0 +1,98 @@
+.header-top {
+    border-radius: 10px;
+    background: rgb(31, 139, 207);
+    background: linear-gradient(90deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
+}
+
+.select {
+    width: 300px;
+}
+
+span.title {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.status-bar {
+    width: 800px;
+
+    .signal-lost {
+        background-color: #9294a3;
+    }
+
+    .threshold-exceeded {
+        background-color: #db302f;
+    }
+
+    .threshold-warning {
+        background-color: #e6b701;
+    }
+
+    .within-threshold {
+        background-color: #39c35c;
+    }
+}
+
+.status-item {
+    flex: 1;
+    font-size: 12px;
+    color: white;
+    font-weight: bold;
+}
+
+.btn-custom {
+    color: white;
+    background-color: #db302f;
+    height: 200px;
+    border-radius: 10px;
+    font-size: 22px;
+
+    label {
+        margin-left: 20px;
+    }
+}
+
+label.title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1f8bcf;
+}
+
+.nav-link {
+    color: unset;
+}
+
+.container {
+    height: 400px;
+    overflow: hidden;
+}
+
+.container-table {
+    max-height: 440px;
+    overflow-y: auto;
+}
+
+table {
+    border-collapse: collapse;
+
+    thead th {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+    }
+
+    th:nth-child(2) {
+        width: 10px;
+    }
+
+    .status {
+        display: block;
+        width: 20px;
+        height: 20px;
+        margin: auto;
+        border-radius: 50%;
+        background-color: #39c35c;
+    }
+}

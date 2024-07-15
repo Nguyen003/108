@@ -1,0 +1,68 @@
+.active {
+    border: 2px solid #CF3440 !important;
+    box-shadow: #CF3440 0px 3px 8px;
+}
+
+.map-container {
+    position: relative;
+}
+
+.map {
+    width: 100%;
+    height: 100vh;
+    border: 0;
+    outline: none;
+    z-index: 0;
+}
+
+.popup__margin {
+    margin-bottom: 50px;
+}
+
+.box-container {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    padding: 15px;
+    background-color: #E1E1E1;
+    transform: translateY(-70%);
+}
+
+select {
+    position: relative;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    width: 1%;
+    margin-bottom: 0;
+}
+
+.search-icon {
+    padding-right: 6px;
+}
+
+.box-container_content {
+    max-height: calc(500px - 140px);
+    overflow-y: auto;
+}
+
+.list-container {
+    margin: 0;
+    margin-right: 4px;
+    padding: 0;
+
+    .list-item_btn {
+        font-size: 1rem;
+        font-weight: 600;
+        width: 100%;
+        margin-bottom: 10px;
+        background: #00FF02;
+        padding: 5px 20px;
+        border: 2px solid #3A763F;
+        border-radius: 10px;
+        text-transform: uppercase;
+    }
+}
