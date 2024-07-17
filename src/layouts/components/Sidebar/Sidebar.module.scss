@@ -1,10 +1,17 @@
 .logo {
     height: 100px;
+    padding: 10px 0;
+    margin-bottom: 20px;
+
+    img {
+        height: 100%;
+    }
 }
 
 .sidebar-menu {
+    position: fixed;
     width: 300px;
-    min-height: 100vh;
+    height: 100vh;
     background-color: #f4f5f7;
 }
 
@@ -13,10 +20,22 @@
 }
 
 .sidebar-nav {
-    padding: 0;
+
+    &.menu {
+        height: 448px;
+        border-bottom: 1px solid #ccc;
+
+        .menu-content {
+            padding: 0 24px;
+            overflow-y: auto;
+        }
+    }
+
+    &.select {
+        padding: 0 24px;
+    }
 
     nav {
-        padding: 0 24px;
         text-align: left;
         line-height: 40px;
 

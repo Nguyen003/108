@@ -12,17 +12,17 @@ const cx = classNames.bind(styles);
 const waterData = [
     {
         id: "sach",
-        name: "Nước sạch",
+        name: "Nước sạch (2/2)",
         stations: [
-            { name: "Cấp nước Gia Định" },
-            { name: "Cấp nước quân khu" }
+            { name: "Cấp nước Gia Định", numDevices: '10/13' },
+            { name: "Cấp nước quân khu", numDevices: '9/13'  }
         ]
     },
     {
         id: "thai",
-        name: "Nước thải",
+        name: "Nước thải (1/1)",
         stations: [
-            { name: "Cấp nước Gia Định" }
+            { name: "Cấp nước Gia Định", numDevices: '13/13'  }
         ]
     }
 ];
@@ -64,28 +64,11 @@ function Home() {
     }, []);
 
     return (
-        <div className="w-100 ps-4 pe-4 d-flex flex-column">
+        <div className={`ps-4 pe-4 d-flex flex-column ${cx('content-right')}`}>
             <div className="pt-2 mb-2">
-                <div className={`w-100 d-flex justify-content-between p-2 ${cx("header-top")}`}>
-                    <div className="d-flex align-items-center">
-                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
-                            <option value="">Chọn đơn vị</option>
-                            <option value="1">One</option>
-                            <option value="2">Two</option>
-                            <option value="3">Three</option>
-                        </select>
-                        <span className={cx("title")}>Tình trạng kết nối (15/15)</span>
-                    </div>
-                    <div className={`d-flex align-items-center ${cx("status-bar")}`}>
-                        <span className={cx("status-item", "signal-lost")}>Mất tín hiệu</span>
-                        <span className={cx("status-item", "threshold-exceeded")}>Vượt ngưỡng</span>
-                        <span className={cx("status-item", "threshold-warning")}>Chuẩn bị vượt</span>
-                        <span className={cx("status-item", "within-threshold")}>Trong ngưỡng</span>
-                    </div>
-                </div>
-                <div className="d-flex justify-content-around mt-3">
+                <div className="d-flex justify-content-around">
                     {button.map((item, index) => (
-                        <a key={index} href={`#${item.id}`} className="col-5">
+                        <a key={index} href={`#${item.id}`} className="col-4">
                             <button className={`w-100 ${cx("btn-custom")}`}>
                                 <i className="fa-solid fa-water"></i>
                                 <label>{item.label}</label>
@@ -99,26 +82,46 @@ function Home() {
             {waterData.map((water, index) => (
                 <div key={index} id={water.id} className="w-100 mt-3 mb-2">
                     <div className="text-start">
-                        <label className={cx("title")}>{water.name} (10/10)</label>
+                        <label className={cx("title")}>{water.name}</label>
                     </div>
                     <div className="mt-2">
                         {water.stations.map((device, idx) => (
                             <div key={idx} className="mb-3">
-                                <div className="d-flex">
-                                    <div className="d-flex col-10">
-                                        <span>{idx + 1}.</span>
-                                        <span className="ms-2">{device.name}</span>
-                                        <span className="ms-2">(10/10)</span>
+                                <div className="">
+                                    <div className="d-flex align-items-center">
+                                        <div className={`d-flex col-10 ${cx('device-info')}`}>
+                                            <span className={cx('device-index')}>{idx + 1}</span>
+                                            <span className="ms-2">{device.name}</span>
+                                            <span className="ms-2">{device.numDevices} - 17/07/2024 - 03:52</span>
+                                        </div>
+                                        <div className="col-2 text-end">
+                                            <button className="btn btn-light p-2 border rounded">
+                                                <NavLink to={{
+                                                    pathname: config.location,
+                                                    search: `?lat=${machines[idx]?.latitude ?? null}&lon=${machines[idx]?.longitude ?? null}`
+                                                }} className={cx("nav-link")}>
+                                                    Bản đồ <i className="fa-solid fa-map-location-dot"></i>
+                                                </NavLink>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div className="col-2">
-                                        <button className="w-100 text-end">
-                                            <NavLink to={{
-                                                pathname: config.location,
-                                                search: `?lat=${machines[idx]?.latitude ?? null}&lon=${machines[idx]?.longitude ?? null}`
-                                            }} className={cx("nav-link")}>
-                                                Bản đồ <i className="fa-solid fa-arrow-right-long fa-beat"></i>
-                                            </NavLink>
-                                        </button>
+                                    <div className={`d-flex align-items-center ${cx("status-bar")}`}>
+                                        <div className={`signal-lost_border ${cx("status-item")}`}>
+                                            <span>Mất tín hiệu</span>
+                                            <span>8</span>
+                                        </div>
+                                        <div className={`threshold-exceeded_border ${cx("status-item")}`}>
+                                            <span>Vượt ngưỡng</span>
+                                            <span>2</span>
+                                        </div>
+                                        <div className={`threshold-warning_border ${cx("status-item")}`}>
+                                            <span>Chuẩn bị vượt</span>
+                                            <span>3</span>
+                                        </div>
+                                        <div className={`within-threshold_border ${cx("status-item")}`}>
+                                            <span>Trong ngưỡng</span>
+                                            <span>4</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className={`d-flex mt-2 ${cx("container")}`}>
@@ -127,6 +130,7 @@ function Home() {
                                             <thead>
                                                 <tr>
                                                     <th scope="col">Tên thiết bị</th>
+                                                    <th scope="col">Camera</th>
                                                     <th scope="col">Trạng thái</th>
                                                 </tr>
                                             </thead>
@@ -134,6 +138,7 @@ function Home() {
                                                 {devices.map((device, index) => (
                                                     <tr key={index}>
                                                         <td>{device.name}</td>
+                                                        <td>0</td>
                                                         <td>
                                                             <span className={cx("status", device.status)}></span>
                                                         </td>

@@ -1,12 +1,12 @@
-.header-top {
-    border-radius: 10px;
-    background: rgb(31, 139, 207);
-    background: linear-gradient(90deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
+.content-right {
+    width: 100%;
 }
 
-.select {
-    width: 300px;
-}
+// .header-top {
+//     border-radius: 10px;
+//     background: rgb(31, 139, 207);
+//     background: linear-gradient(90deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
+// }
 
 span.title {
     color: white;
@@ -16,36 +16,31 @@ span.title {
 }
 
 .status-bar {
-    width: 800px;
-}
-
-.signal-lost {
-    background-color: #9294a3 !important;
-}
-
-.threshold-exceeded {
-    background-color: #db302f !important;
-}
-
-.threshold-warning {
-    background-color: #e6b701 !important;
-}
-
-.within-threshold {
-    background-color: #39c35c !important;
+    width: 100%;
+    padding: 10px 0;
+    justify-content: space-evenly;
 }
 
 .status-item {
-    flex: 1;
-    font-size: 12px;
+    height: 110px;
+    width: 300px;
     color: white;
     font-weight: bold;
+    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    justify-content: space-evenly;
+
+    span:nth-last-child(1) {
+        font-size: 22px;
+    }
 }
 
 .btn-custom {
     color: white;
     background-color: #db302f;
-    height: 200px;
+    height: 150px;
     border-radius: 10px;
     font-size: 22px;
 
@@ -55,9 +50,29 @@ span.title {
 }
 
 label.title {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: bold;
-    color: #1f8bcf;
+    line-height: 2;
+    padding: 0 10px;
+    width: 100%;
+    color: white;
+    border-radius: 10px;
+    background: rgb(31, 139, 207);
+    background: linear-gradient(90deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
+}
+
+.device-info {
+    line-height: 25px;
+
+    .device-index {
+        width: 25px;
+        height: 25px;
+        color: white;
+        border-radius: 8px;
+        background: rgb(31, 139, 207);
+        background: linear-gradient(135deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
+        font-weight: bold;
+    }
 }
 
 .nav-link {
@@ -83,7 +98,8 @@ table {
         background-color: #fff;
     }
 
-    th:nth-child(2) {
+    th:nth-child(2),
+    th:nth-child(3) {
         width: 10px;
     }
 

@@ -10,7 +10,11 @@ function DefaultLayout({ children }) {
     return (
         <div className={cx('container')}>
             <Sidebar />
-            <div className={cx('content')}>{children}</div>
+            <div className={cx('content')}>
+                <div style={{width: 'calc(100% - 300px)'}}>
+                    {children}
+                </div>
+            </div>
         </div>
     );
 }

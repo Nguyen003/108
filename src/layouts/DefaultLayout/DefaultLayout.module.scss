@@ -1,8 +1,10 @@
 .container {
     width: 100%;
-    display: flex;
+    // display: flex;
 }
 
 .content {
-    flex: 1;
+    // flex: 1;
+    display: flex;
+    justify-content: end;
 }
