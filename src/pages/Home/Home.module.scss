@@ -17,22 +17,22 @@ span.title {
 
 .status-bar {
     width: 800px;
+}
 
-    .signal-lost {
-        background-color: #9294a3;
-    }
+.signal-lost {
+    background-color: #9294a3 !important;
+}
 
-    .threshold-exceeded {
-        background-color: #db302f;
-    }
+.threshold-exceeded {
+    background-color: #db302f !important;
+}
 
-    .threshold-warning {
-        background-color: #e6b701;
-    }
+.threshold-warning {
+    background-color: #e6b701 !important;
+}
 
-    .within-threshold {
-        background-color: #39c35c;
-    }
+.within-threshold {
+    background-color: #39c35c !important;
 }
 
 .status-item {
@@ -65,7 +65,7 @@ label.title {
 }
 
 .container {
-    height: 400px;
+    height: 395px;
     overflow: hidden;
 }
 
@@ -79,7 +79,7 @@ table {
 
     thead th {
         position: sticky;
-        top: 0;
+        top: -0.5px;
         background-color: #fff;
     }
 

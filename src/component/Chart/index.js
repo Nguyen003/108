@@ -1,25 +1,27 @@
 import React from 'react';
+import { Bar, Line } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
-    BarElement,
+    LineElement,
+    PointElement,
     Title,
     Tooltip,
     Legend,
 } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(
     CategoryScale,
     LinearScale,
-    BarElement,
+    LineElement,
+    PointElement,
     Title,
     Tooltip,
     Legend
 );
 
-const labels = ['2h', '5h', '8h', '11h', '14h', '17h', '20h', '23h'];
+const labels = ['2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'];
 
 function ChartBar() {
     const options = {
@@ -62,6 +64,6 @@ function ChartBar() {
             }
         ],
     };
-    return <Bar options={options} data={data}/>;
+    return <Line options={options} data={data}/>;
 }
 export { ChartBar };

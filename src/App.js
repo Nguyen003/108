@@ -19,7 +19,6 @@ function App() {
             if (route.layout) {
               Layout = route.layout;
             } else if (route.path === '/') {
-              console.log('Layout');
               Layout = Fragment;
             }
             return (

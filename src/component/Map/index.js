@@ -1,72 +1,44 @@
 import 'leaflet/dist/leaflet.css';
 import classNames from "classnames/bind";
-import React, { useEffect, useState, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents, Tooltip, Popup, Circle } from 'react-leaflet';
+import React, { useEffect, useState } from 'react';
+import { MapContainer, TileLayer, Marker, Tooltip, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 
 import styles from "./Map.module.scss";
 import locationIcon from '~/assets/images/location-icon.png';
-// import Tooltip from '~/assets/bootstrap/js/tooltip';
+import { listLocations } from '~/services/LocationsServices';
 
 const cx = classNames.bind(styles);
 
-function MapEvents({ onBoundsChange }) {
-    useMapEvents({
-        moveend: (event) => {
-            const bounds = event.target.getBounds();
-            onBoundsChange(bounds);
-        },
-        zoomend: (event) => {
-            const bounds = event.target.getBounds();
-            onBoundsChange(bounds);
-        }
-    });
-
-    return null;
-}
-
-const Map = ({ onClickBtn, activeIndex }) => {
+const Map = ({ lat, lon, zoom }) => {
     const [machines, setMachines] = useState([]);
-    const [visibleMachines, setVisibleMachines] = useState([]);
 
     useEffect(() => {
-        fetch('https://api.maptiler.com/data/090afe88-bf4a-4c74-99f4-ac1b676c7944/features.json?key=VkLDjfAmKsJZt6TIJ6DG')
-            .then(response => response.json())
-            .then(data => {
-                // Trích xuất thông tin cần thiết từ dữ liệu JSON
-                const extractedMarkers = data.features.map(feature => ({
-                    id: feature.id, // Lấy id
-                    name: feature.properties.text,
-                    latitude: feature.geometry.coordinates[1], // Lấy latitude
-                    longitude: feature.geometry.coordinates[0], // Lấy longitude
-                }));
-                setMachines(extractedMarkers);
-            })
-            .catch(error => console.error('Error fetching data:', error));
+        const getMachines = async () => {
+            try {
+                listLocations().then(data => {
+                    setMachines(data)
+                })
+            } catch (error) {
+                console.error('Component Map:', error);
+            }
+        };
+
+        getMachines();
     }, []);
 
-    const updateVisibleMachines = (bounds) => {
-        const visible = machines.filter(machine =>
-            bounds.contains([machine.latitude, machine.longitude])
-        );
-        setVisibleMachines(visible);
-    };
-
-    // di chuyển đến vị trí khi click vào listBtn
-    const [map, setMap] = useState(null);
-    const handleButtonClick = useCallback((machine) => {
-        const { latitude, longitude } = machine;
-        map.setView([latitude, longitude], 8);
-        onClickBtn(machine);
-    }, [map, onClickBtn])
+    if(!lat && !lon) {
+        lat = 16.047079;
+        lon = 108.206230;
+        zoom = 6;
+    }
 
     return (
         <div className={cx("map-container")} >
             <MapContainer
-                center={[16.047079, 108.206230]}
-                zoom={6}
+                center={[lat, lon]}
+                zoom={zoom}
                 className={cx('map')}
-                ref={setMap}
             >
                 <TileLayer
                     url={`https://api.maptiler.com/maps/outdoor-v2/256/{z}/{x}/{y}@2x.png?key=VkLDjfAmKsJZt6TIJ6DG`}
@@ -107,40 +79,7 @@ const Map = ({ onClickBtn, activeIndex }) => {
                         />
                     </React.Fragment>
                 ))}
-                <MapEvents onBoundsChange={updateVisibleMachines} />
             </MapContainer>
-            {/* <div className={cx("box-container")}>
-                <div className={cx("box-container_input")}>
-                    <div className="input-group">
-                        <label className="input-group-text" htmlFor="inputGroupSelect01">Status</label>
-                        <select className="custom-select" id="inputGroupSelect01">
-                            <option value="">All</option>
-                            <option value="1">test 1</option>
-                            <option value="2">test 2</option>
-                            <option value="3">test 3</option>
-                        </select>
-                    </div>
-                    <div className="input-group mb-3">
-                        <span className="input-group-text" id="inputGroup-sizing-default"><i className={`${cx('search-icon')} fa fa-search`} aria-hidden="true"></i> Name</span>
-                        <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
-                    </div>
-                </div>
-                <div className={cx("box-container_content")}>
-                    <ul className={cx('list-container')}>
-                        {visibleMachines.map((machine) => (
-                            <li key={machine.id} className={cx('list-item')}>
-                                <button
-                                    type="button"
-                                    className={`${cx('list-item_btn')} ${activeIndex?.id === machine.id ? cx('active') : ''}`}
-                                    onClick={() => handleButtonClick(machine)}
-                                >
-                                    {machine.name}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </div> */}
         </div>
     );
 };
