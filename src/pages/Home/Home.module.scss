@@ -27,10 +27,8 @@ span.title {
     color: white;
     font-weight: bold;
     font-size: 16px;
-    display: flex;
-    flex-direction: column;
+    // justify-content: space-evenly;
     border-radius: 10px;
-    justify-content: space-evenly;
 
     span:nth-last-child(1) {
         font-size: 22px;
@@ -52,7 +50,7 @@ span.title {
 label.title {
     font-size: 20px;
     font-weight: bold;
-    line-height: 2;
+    line-height: 1.6;
     padding: 0 10px;
     width: 100%;
     color: white;
