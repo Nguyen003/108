@@ -1,33 +1,39 @@
 import 'leaflet/dist/leaflet.css';
 import classNames from "classnames/bind";
-import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Tooltip, Popup, Circle } from 'react-leaflet';
+import React, { useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, useMapEvents, Tooltip, Popup, Circle } from 'react-leaflet';
 import L from 'leaflet';
 
 import styles from "./Map.module.scss";
 import locationIcon from '~/assets/images/location-icon.png';
-import { listLocations } from '~/services/LocationsServices';
 
 const cx = classNames.bind(styles);
 
-const Map = ({ lat, lon, zoom }) => {
-    const [machines, setMachines] = useState([]);
+function MapEvents({ onBoundsChange }) {
+    const map = useMapEvents({
+        moveend: (event) => {
+            const bounds = event.target.getBounds();
+            onBoundsChange(bounds);
+        },
+        zoomend: (event) => {
+            const bounds = event.target.getBounds();
+            onBoundsChange(bounds);
+        }
+    });
 
     useEffect(() => {
-        const getMachines = async () => {
-            try {
-                listLocations().then(data => {
-                    setMachines(data)
-                })
-            } catch (error) {
-                console.error('Component Map:', error);
-            }
-        };
+        if (map) {
+            const bounds = map.getBounds();
+            onBoundsChange(bounds);
+        }
+    }, [map, onBoundsChange]);
 
-        getMachines();
-    }, []);
+    return null;
+}
 
-    if(!lat && !lon) {
+const Map = ({ lat, lon, zoom, ...props }) => {
+
+    if (!lat && !lon) {
         lat = 16.047079;
         lon = 108.206230;
         zoom = 6;
@@ -39,11 +45,12 @@ const Map = ({ lat, lon, zoom }) => {
                 center={[lat, lon]}
                 zoom={zoom}
                 className={cx('map')}
+                ref={props.setMap}
             >
                 <TileLayer
                     url={`https://api.maptiler.com/maps/outdoor-v2/256/{z}/{x}/{y}@2x.png?key=VkLDjfAmKsJZt6TIJ6DG`}
                 />
-                {machines.map(machine => (
+                {props.data.map(machine => (
                     <React.Fragment key={machine.id}>
                         <Marker
                             key={machine.id}
@@ -79,6 +86,7 @@ const Map = ({ lat, lon, zoom }) => {
                         />
                     </React.Fragment>
                 ))}
+                <MapEvents onBoundsChange={props.mapEvent} />
             </MapContainer>
         </div>
     );

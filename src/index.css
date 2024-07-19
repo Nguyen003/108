@@ -57,22 +57,25 @@ a {
 .status-item {
   flex: 1;
   font-size: 12px;
-  color: white;
 }
 
 .signal-lost {
+  color: white;
   background-color: #9294a3 !important;
 }
 
 .threshold-exceeded {
+  color: white;
   background-color: #db302f !important;
 }
 
 .threshold-warning {
+  color: white;
   background-color: #e6b701 !important;
 }
 
 .within-threshold {
+  color: white;
   background-color: #39c35c !important;
 }
 

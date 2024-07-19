@@ -12,17 +12,17 @@ const cx = classNames.bind(styles);
 const waterData = [
     {
         id: "sach",
-        name: "Nước sạch (2/2)",
+        name: "Nước sạch (2)",
         stations: [
             { name: "Cấp nước Gia Định", numDevices: '10/13' },
-            { name: "Cấp nước quân khu", numDevices: '9/13'  }
+            { name: "Cấp nước quân khu", numDevices: '9/13' }
         ]
     },
     {
         id: "thai",
-        name: "Nước thải (1/1)",
+        name: "Nước thải (1)",
         stations: [
-            { name: "Cấp nước Gia Định", numDevices: '13/13'  }
+            { name: "Cấp nước Gia Định", numDevices: '13/13' }
         ]
     }
 ];
@@ -70,7 +70,7 @@ function Home() {
                     {button.map((item, index) => (
                         <a key={index} href={`#${item.id}`} className="col-4">
                             <button className={`w-100 ${cx("btn-custom")}`}>
-                                <i className="fa-solid fa-water"></i>
+                                {index === 1 ? <i className="fa-solid fa-water"></i> : <i className="fa-solid fa-droplet"></i>}
                                 <label>{item.label}</label>
                             </button>
                         </a>
@@ -82,14 +82,17 @@ function Home() {
             {waterData.map((water, index) => (
                 <div key={index} id={water.id} className="w-100 mt-3 mb-2">
                     <div className="text-start">
-                        <label className={cx("title")}>{water.name}</label>
+                        <label className={cx("title")}>
+                            {index === 1 ? <i className="fa-solid fa-water me-2"></i> : <i className="fa-solid fa-droplet me-2"></i>}
+                            {water.name}
+                        </label>
                     </div>
                     <div className="mt-2">
                         {water.stations.map((device, idx) => (
                             <div key={idx} className="mb-3">
                                 <div className="">
                                     <div className="d-flex align-items-center">
-                                        <div className={`d-flex col-10 ${cx('device-info')}`}>
+                                        <div className={`d-flex col-10 fw-bold ${cx('device-info')}`}>
                                             <span className={cx('device-index')}>{idx + 1}</span>
                                             <span className="ms-2">{device.name}</span>
                                             <span className="ms-2">{device.numDevices} - 17/07/2024 - 03:52</span>
@@ -106,21 +109,41 @@ function Home() {
                                         </div>
                                     </div>
                                     <div className={`d-flex align-items-center ${cx("status-bar")}`}>
-                                        <div className={`signal-lost_border ${cx("status-item")}`}>
-                                            <span>Mất tín hiệu</span>
-                                            <span>8</span>
+                                        <div className={`d-flex align-items-center signal-lost ps-4 pe-4 ${cx("status-item")}`}>
+                                            <div className="col-4 fs-1">
+                                                <i className="fa-regular fa-circle-xmark"></i>
+                                            </div>
+                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
+                                                <span>Mất tín hiệu</span>
+                                                <span>8</span>
+                                            </div>
                                         </div>
-                                        <div className={`threshold-exceeded_border ${cx("status-item")}`}>
-                                            <span>Vượt ngưỡng</span>
-                                            <span>2</span>
+                                        <div className={`d-flex align-items-center threshold-exceeded ps-4 pe-4 ${cx("status-item")}`}>
+                                            <div className="col-4 fs-1">
+                                                <i className="fa-solid fa-triangle-exclamation"></i>
+                                            </div>
+                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
+                                                <span>Lỗi</span>
+                                                <span>2</span>
+                                            </div>
                                         </div>
-                                        <div className={`threshold-warning_border ${cx("status-item")}`}>
-                                            <span>Chuẩn bị vượt</span>
-                                            <span>3</span>
+                                        <div className={`d-flex align-items-center threshold-warning ps-4 pe-4 ${cx("status-item")}`}>
+                                            <div className="col-4 fs-1">
+                                                <i className="fa-solid fa-triangle-exclamation"></i>
+                                            </div>
+                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
+                                                <span>Dừng hoạt động</span>
+                                                <span>3</span>
+                                            </div>
                                         </div>
-                                        <div className={`within-threshold_border ${cx("status-item")}`}>
-                                            <span>Trong ngưỡng</span>
-                                            <span>4</span>
+                                        <div className={`d-flex align-items-center within-threshold ps-4 pe-4 ${cx("status-item")}`}>
+                                            <div className="col-4 fs-1">
+                                                <i className="fa-solid fa-circle-check"></i>
+                                            </div>
+                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
+                                                <span>Đang hoạt động</span>
+                                                <span>4</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
