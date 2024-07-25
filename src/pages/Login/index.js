@@ -1,15 +1,15 @@
 import '~/assets/css/util.css';
 import 'react-toastify/dist/ReactToastify.css';
-import classNames from 'classnames/bind';
+// import classNames from 'classnames/bind';
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-import styles from './Login.module.scss'
-import image from '~/assets/images/img-01.png'
+import './Login.scss'
+import { logo } from '~/assets/images'
 import config from '~/router/config-router'
 
-const cx = classNames.bind(styles)
+// const cx = classNames.bind(styles)
 
 function Login() {
     const [username, setUsername] = useState('');
@@ -34,45 +34,117 @@ function Login() {
         }
     }
 
-    return(
-        <div className={cx('limiter')}>
-            <div className={cx('container-login100')}>
-                <div className={cx('wrap-login100')}>
-                    <div className={`${cx('login100-pic')} js-tilt`} data-tilt>
-                        <img src={image} alt="IMG" />
+    return (
+        <main className="main-login">
+            <div className="login-box">
+                <div className="row">
+                    <div className="col-12 col-md-6 align-self-center">
+                        <div className="d-flex flex-column align-items-center logo mx-auto text-center">
+                            <img src={logo} alt="" />
+                            <label className="mt-2"><span style={{ fontSize: '22px', color: '#0008A0' }}>Đơn vị</span></label>
+                        </div>
                     </div>
 
-                    <div className={`${cx('login100-form')} validate-form`}>
-                        <span className={cx('login100-form-title')}>
-                            Đăng nhập
-                        </span>
+                    <div className="col-12 col-md-6">
+                        <div className="content-box">
+                            <div className="sub-text">
+                                <img src="~/images/text_login.svg" alt="" />
+                            </div>
+                            <form id="account" method="post">
+                                <div className="form">
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <div className="input-group">
+                                                <div className="input-group-prepend">
+                                                    <div className="input-group-text h-100">
+                                                        <i className="fa-solid fa-user"></i>
+                                                    </div>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    aria-required="true"
+                                                    placeholder="Tên đăng nhập"
+                                                    value={username}
+                                                    onChange={(e) => setUsername(e.target.value)}
+                                                />
+                                                <span asp-validation-for="Input.UserName" className="text-danger"></span>
+                                            </div>
+                                        </div>
 
-                        <div className={cx('wrap-input100', 'validate-input')} >
-                            <input className={cx('input100')} type="text" value={username} onChange={(e) => setUsername(e.target.value)} name="user" placeholder="Tên đăng nhập" />
-                            <span className={cx('focus-input100')}></span>
-                            <span className={cx('symbol-input100')}>
-                                <i className="fa-solid fa-user"></i>
-                            </span>
-                        </div>
+                                        <div className="col-12">
+                                            <div className="input-group">
+                                                <div className="input-group-prepend">
+                                                    <div className="input-group-text h-100">
+                                                        <i className="fa-solid fa-lock"></i>
+                                                    </div>
+                                                </div>
+                                                <input
+                                                    type="password"
+                                                    className="form-control"
+                                                    aria-required="true"
+                                                    placeholder="Mật khẩu"
+                                                    value={password}
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                />
+                                                <span asp-validation-for="Input.Password" className="text-danger"></span>
+                                            </div>
+                                        </div>
 
-                        <div className={cx('wrap-input100', 'validate-input')} data-validate="Password is required">
-                            <input className={cx('input100')} type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="pass" placeholder="Mật khẩu" />
-                            <span className={cx('focus-input100')}></span>
-                            <span className={cx('symbol-input100')}>
-                                <i className="fa fa-lock" aria-hidden="true"></i>
-                            </span>
-                        </div>
-
-                        <div className={cx('container-login100-form-btn')}>
-                            <button className={cx('login100-form-btn')} onClick={handleLogin}>
-                                Đăng nhập
-                            </button>
+                                        <div className="col-12">
+                                            <button type="button" className="btn-login" onClick={handleLogin}>ĐĂNG NHẬP</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
+
+                <div className="text-end">
+                    <p className="text-uppercase text-center m-0">Phần mềm giám sát và quản lý trạm từ xa</p>
+                </div>
             </div>
             <ToastContainer />
-        </div>
+        </main>
+        // <div classNameName={cx('limiter')}>
+        //     <div classNameName={cx('container-login100')}>
+        //         <div classNameName={cx('wrap-login100')}>
+        //             <div classNameName={`${cx('login100-pic')} js-tilt`} data-tilt>
+        //                 <img src={image} alt="IMG" />
+        //             </div>
+
+        //             <div classNameName={`${cx('login100-form')} validate-form`}>
+        //                 <span classNameName={cx('login100-form-title')}>
+        //                     Đăng nhập
+        //                 </span>
+
+        //                 <div classNameName={cx('wrap-input100', 'validate-input')} >
+        //                     <input classNameName={cx('input100')} type="text" value={username} onChange={(e) => setUsername(e.target.value)} name="user" placeholder="Tên đăng nhập" />
+        //                     <span classNameName={cx('focus-input100')}></span>
+        //                     <span classNameName={cx('symbol-input100')}>
+        //                         <i classNameName="fa-solid fa-user"></i>
+        //                     </span>
+        //                 </div>
+
+        //                 <div classNameName={cx('wrap-input100', 'validate-input')} data-validate="Password is required">
+        //                     <input classNameName={cx('input100')} type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="pass" placeholder="Mật khẩu" />
+        //                     <span classNameName={cx('focus-input100')}></span>
+        //                     <span classNameName={cx('symbol-input100')}>
+        //                         <i classNameName="fa fa-lock" aria-hidden="true"></i>
+        //                     </span>
+        //                 </div>
+
+        //                 <div classNameName={cx('container-login100-form-btn')}>
+        //                     <button classNameName={cx('login100-form-btn')} onClick={handleLogin}>
+        //                         Đăng nhập
+        //                     </button>
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     </div>
+        //     <ToastContainer />
+        // </div>
     );
 }
 

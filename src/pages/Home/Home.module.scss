@@ -23,7 +23,7 @@ span.title {
 
 .status-item {
     height: 110px;
-    width: 300px;
+    width: 280px;
     color: white;
     font-weight: bold;
     font-size: 16px;
@@ -85,28 +85,38 @@ label.title {
 .container-table {
     max-height: 440px;
     overflow-y: auto;
+
+    table {
+        border-collapse: collapse;
+    
+        thead th {
+            position: sticky;
+            top: -0.5px;
+            background-color: #fff;
+        }
+    
+        th:nth-child(2),
+        th:nth-child(3) {
+            width: 10px;
+        }
+    
+        .status {
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin: auto;
+            border-radius: 50%;
+            background-color: #39c35c;
+        }
+    }
 }
 
-table {
-    border-collapse: collapse;
+.chart {
+    height: 90%;
+}
 
-    thead th {
-        position: sticky;
-        top: -0.5px;
-        background-color: #fff;
-    }
-
-    th:nth-child(2),
-    th:nth-child(3) {
-        width: 10px;
-    }
-
-    .status {
-        display: block;
-        width: 20px;
-        height: 20px;
-        margin: auto;
-        border-radius: 50%;
-        background-color: #39c35c;
-    }
+.nav-page {
+    line-height: 22px;
+    padding-left: 20px;
+    padding-right: 10px;
 }

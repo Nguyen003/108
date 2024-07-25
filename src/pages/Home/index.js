@@ -1,11 +1,14 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 
 import styles from './Home.module.scss'
 import config from '~/router/config-router'
 import { ChartBar } from '~/component/Chart';
 import { listLocations } from '~/services/LocationsServices';
+import CameraPopup from '~/component/Popup/Camera';
+import { cam1, cam2, cam3, cam4 } from '~/assets/images';
 
 const cx = classNames.bind(styles);
 
@@ -48,6 +51,13 @@ const button = [
     { id: "thai", label: 'Nước thải' }
 ]
 
+const cameras = [
+    { label: 'Cam 1', imageSrc: cam1, altText: 'Camera 1' },
+    { label: 'Cam 2', imageSrc: cam2, altText: 'Camera 2' },
+    { label: 'Cam 3', imageSrc: cam3, altText: 'Camera 3' },
+    { label: 'Cam 4', imageSrc: cam4, altText: 'Camera 4' }
+];
+
 function Home() {
     const [machines, setMachines] = useState([]);
     useEffect(() => {
@@ -62,21 +72,26 @@ function Home() {
 
         getMachines();
     }, []);
+    ////////////////////////////////
+    const [imgModal, setImgModal] = useState(null);
+    const handleOpenModal = useCallback((img) => {
+        setImgModal(img);
+    }, []);
 
     return (
         <div className={`ps-4 pe-4 d-flex flex-column ${cx('content-right')}`}>
-            <div className="pt-2 mb-2">
+            {/* <div className="pt-2 mb-2">
                 <div className="d-flex justify-content-around">
                     {button.map((item, index) => (
                         <a key={index} href={`#${item.id}`} className="col-4">
                             <button className={`w-100 ${cx("btn-custom")}`}>
-                                {index === 1 ? <i className="fa-solid fa-water"></i> : <i className="fa-solid fa-droplet"></i>}
+                                <i className={`fa-solid ${index === 1 ? "fa-water" : "fa-droplet"}`}></i>
                                 <label>{item.label}</label>
                             </button>
                         </a>
                     ))}
                 </div>
-            </div>
+            </div> */}
 
             {/* Chi tiết nước sạch và nước thải */}
             {waterData.map((water, index) => (
@@ -97,7 +112,7 @@ function Home() {
                                             <span className="ms-2">{device.name}</span>
                                             <span className="ms-2">{device.numDevices} - 17/07/2024 - 03:52</span>
                                         </div>
-                                        <div className="col-2 text-end">
+                                        <div className="col-1">
                                             <button className="btn btn-light p-2 border rounded">
                                                 <NavLink to={{
                                                     pathname: config.location,
@@ -107,6 +122,20 @@ function Home() {
                                                 </NavLink>
                                             </button>
                                         </div>
+                                        <div className="col-1 text-end">
+                                            <div className="btn-group">
+                                                <button type="button" className="btn btn-light p-2 border rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Camera <i className="fa-solid fa-video"></i>
+                                                </button>
+                                                <ul className="dropdown-menu" style={{ cursor: 'pointer' }}>
+                                                    {cameras.map((camera, index) => (
+                                                        <li key={index} className="dropdown-item" data-bs-toggle="modal" data-bs-target="#cameraModal" onClick={() => handleOpenModal(camera.imageSrc)}>
+                                                            {camera.label}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div className={`d-flex align-items-center ${cx("status-bar")}`}>
                                         <div className={`d-flex align-items-center signal-lost ps-4 pe-4 ${cx("status-item")}`}>
@@ -114,7 +143,7 @@ function Home() {
                                                 <i className="fa-regular fa-circle-xmark"></i>
                                             </div>
                                             <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>Mất tín hiệu</span>
+                                                <span>TB Mất tín hiệu</span>
                                                 <span>8</span>
                                             </div>
                                         </div>
@@ -123,16 +152,16 @@ function Home() {
                                                 <i className="fa-solid fa-triangle-exclamation"></i>
                                             </div>
                                             <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>Lỗi</span>
+                                                <span>TB Lỗi</span>
                                                 <span>2</span>
                                             </div>
                                         </div>
                                         <div className={`d-flex align-items-center threshold-warning ps-4 pe-4 ${cx("status-item")}`}>
                                             <div className="col-4 fs-1">
-                                                <i className="fa-solid fa-triangle-exclamation"></i>
+                                                <i className="fa-solid fa-circle-pause"></i>
                                             </div>
                                             <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>Dừng hoạt động</span>
+                                                <span>TB Dừng hoạt động</span>
                                                 <span>3</span>
                                             </div>
                                         </div>
@@ -141,7 +170,7 @@ function Home() {
                                                 <i className="fa-solid fa-circle-check"></i>
                                             </div>
                                             <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>Đang hoạt động</span>
+                                                <span>TB Đang hoạt động</span>
                                                 <span>4</span>
                                             </div>
                                         </div>
@@ -171,7 +200,25 @@ function Home() {
                                         </table>
                                     </div>
                                     <div className="col-8">
-                                        <ChartBar />
+                                        <div className={cx("chart")}>
+                                            <ChartBar />
+                                        </div>
+                                        <div className={cx("nav-page")}>
+                                            <ul className="nav nav-underline">
+                                                <li className="nav-item">
+                                                    <a className="nav-link active" href="#">Tất cả</a>
+                                                </li>
+                                                <li className="nav-item">
+                                                    <a className="nav-link" href="#">Công suất</a>
+                                                </li>
+                                                <li className="nav-item">
+                                                    <a className="nav-link" href="#">Áp lực</a>
+                                                </li>
+                                                <li className="nav-item">
+                                                    <a className="nav-link">Thời gian hoạt động</a>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -179,6 +226,7 @@ function Home() {
                     </div>
                 </div>
             ))}
+            <CameraPopup imageSrc={imgModal} />
         </div>
     )
 }

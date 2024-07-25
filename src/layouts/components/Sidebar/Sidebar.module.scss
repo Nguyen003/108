@@ -10,7 +10,7 @@
 
 .sidebar-menu {
     position: fixed;
-    width: 300px;
+    width: 250px;
     height: 100vh;
     background-color: #f4f5f7;
 }
@@ -22,7 +22,7 @@
 .sidebar-nav {
 
     &.menu {
-        height: 448px;
+        height: 400px;
         border-bottom: 1px solid #ccc;
 
         .menu-content {

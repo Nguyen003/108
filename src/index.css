@@ -48,6 +48,11 @@ a {
   text-decoration: none !important;
 }
 
+/* cursor */
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
 /*  */
 .status-bar {
   width: 400px;
@@ -97,4 +102,16 @@ a {
 .within-threshold_border {
   border: 1px solid #39c35c !important;
   color: #39c35c !important;
+}
+
+/*  */
+.nav-link {
+  color: unset !important;
+  ;
+}
+
+.nav-underline .nav-link.active {
+  font-weight: 700 !important;
+  color: #0d6efd !important;
+  border-bottom-color: #0d6efd !important;
 }

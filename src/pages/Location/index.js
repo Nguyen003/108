@@ -5,6 +5,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import styles from "./Location.module.scss";
 import Map from "~/component/Map";
 import { listLocations } from '~/services/LocationsServices';
+import Accordion from 'react-bootstrap/Accordion';
 
 const cx = classNames.bind(styles);
 
@@ -83,27 +84,39 @@ function Location() {
                     <span className="status-item within-threshold">Đang hoạt động</span>
                 </div>
             </div>
-            <div className="col-3 p-2">
+            <div className="col-3 pt-2 ps-2 pe-2">
                 <div>
                     <div className={cx('title')}>
                         <span className="d-block">Trạng thái dữ liệu</span>
                     </div>
                     <div className={`d-flex flex-wrap align-items-center ${cx("status-bar")}`}>
-                        <div className={`signal-lost_border ${cx("status-item")}`}>
-                            <span>Mất tín hiệu</span>
-                            <span>{selectedMachineData ? selectedMachineData.signalLostCount : 0}</span>
+                        <div className={`signal-lost position-relative ${cx("status-item")}`}>
+                            <input className="form-check-input position-absolute" type="checkbox" value="" id="signalLost" defaultChecked={true} />
+                            <label className="form-check-label d-flex flex-column justify-content-end h-100" htmlFor="signalLost">
+                                <span className="mb-3">TB Mất tín hiệu</span>
+                                <span className="mb-2">{selectedMachineData ? selectedMachineData.signalLostCount : 0}</span>
+                            </label>
                         </div>
-                        <div className={`threshold-exceeded_border ${cx("status-item")}`}>
-                            <span>Lỗi</span>
-                            <span>{selectedMachineData ? selectedMachineData.thresholdExceededCount : 0}</span>
+                        <div className={`threshold-exceeded position-relative ${cx("status-item")}`}>
+                            <input className="form-check-input position-absolute" type="checkbox" value="" id="thresholdExceeded" defaultChecked={true} />
+                            <label className="form-check-label d-flex flex-column justify-content-end h-100" htmlFor="thresholdExceeded">
+                                <span className="mb-3">TB Lỗi</span>
+                                <span className="mb-2">{selectedMachineData ? selectedMachineData.thresholdExceededCount : 0}</span>
+                            </label>
                         </div>
-                        <div className={`threshold-warning_border ${cx("status-item")}`}>
-                            <span>Dừng hoạt động</span>
-                            <span>{selectedMachineData ? selectedMachineData.thresholdWarningCount : 0}</span>
+                        <div className={`threshold-warning position-relative ${cx("status-item")}`}>
+                            <input className="form-check-input position-absolute" type="checkbox" value="" id="thresholdWarning" defaultChecked={true} />
+                            <label className="form-check-label d-flex flex-column justify-content-end h-100" htmlFor="thresholdWarning">
+                                <span className="mb-3">TB Dừng hoạt động</span>
+                                <span className="mb-2">{selectedMachineData ? selectedMachineData.thresholdWarningCount : 0}</span>
+                            </label>
                         </div>
-                        <div className={`within-threshold_border ${cx("status-item")}`}>
-                            <span>Đang hoạt động</span>
-                            <span>{selectedMachineData ? selectedMachineData.withinThresholdCount : 0}</span>
+                        <div className={`within-threshold position-relative ${cx("status-item")}`}>
+                            <input className="form-check-input position-absolute" type="checkbox" value="" id="withinThreshold" defaultChecked={true} />
+                            <label className="form-check-label d-flex flex-column justify-content-end h-100" htmlFor="withinThreshold">
+                                <span className="mb-3">TB Đang hoạt động</span>
+                                <span className="mb-2">{selectedMachineData ? selectedMachineData.withinThresholdCount : 0}</span>
+                            </label>
                         </div>
                     </div>
                     <div>
@@ -111,21 +124,34 @@ function Location() {
                             <span className="d-block">Tất cả</span>
                         </div>
                         <div className={cx('list-container')}>
-                            <div className={`list-group list-group-flush ${cx('button-group')}`}>
-                                {visibleMachines.map((item, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => handleButtonClick(item, index)}
-                                        type="button"
-                                        className={classNames(
-                                            'list-group-item list-group-item-action',
-                                            { 'active': item.id === activeButtonRef.current }
-                                        )}
-                                    >
-                                        {item.name}
-                                    </button>
-                                ))}
+                            <div className="input-group rounded mt-2 mb-2 position-relative pe-1">
+                                <input type="search" className="form-control rounded bg-transparent ps-5" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                                <span className="input-group-text h-100 border-0 bg-transparent position-absolute" id="search-addon">
+                                    <i className="fas fa-search"></i>
+                                </span>
                             </div>
+                            <Accordion defaultActiveKey="0" className={cx("accordion-container")}>
+                                <Accordion.Item eventKey="0">
+                                    <Accordion.Header>Nước sạch</Accordion.Header>
+                                    <Accordion.Body>
+                                        <div className={`list-group list-group-flush ${cx('button-group')}`}>
+                                            {visibleMachines.map((item, index) => (
+                                                <button
+                                                    key={index}
+                                                    onClick={() => handleButtonClick(item, index)}
+                                                    type="button"
+                                                    className={classNames(
+                                                        'list-group-item list-group-item-action',
+                                                        { 'active': item.id === activeButtonRef.current }
+                                                    )}
+                                                >
+                                                    {item.name}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                            </Accordion>
                         </div>
                     </div>
                 </div>
