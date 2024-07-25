@@ -1,0 +1,132 @@
+.main-login,
+.register {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../../assets/images/bg_login.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+
+.main-login .input-group-prepend {
+    height: 100%;
+}
+
+
+.login-box {
+    max-width: 703px;
+    height: 377px;
+    padding-left: 21px;
+    padding-right: 43px;
+    background: #42c9dd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 37px;
+    margin-top: -84px;
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.login-box .logo {
+    max-width: 243px;
+
+    img {
+        width: 160px;
+    }
+}
+
+.login-box .row {
+    margin-top: -30px;
+}
+
+.login-box .text-end {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    background: #c1d0e5c0;
+    padding: 10px;
+}
+
+.login-box .text-end p {
+    color: #DA241C;
+    font-size: 19.5px;
+}
+
+.login-box .content-box .form {
+    padding-top: 20px;
+}
+
+.login-box .content-box .form .input-group {
+    height: 40px;
+    margin-bottom: 15px;
+    -webkit-box-shadow: 0px 1px 8px 0px rgba(111, 160, 125, 0.71);
+    box-shadow: 0px 1px 8px 0px rgba(111, 160, 125, 0.71);
+
+    input {
+        box-shadow: none;
+        border-color: #dee2e6;
+    }
+}
+
+.login-box .content-box .form .btn-login {
+    margin: 20px auto 0px auto;
+    width: 156px;
+    height: 40px;
+    color: #fff;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0091ce;
+    border-radius: 5px;
+    transition: .3s ease-out;
+    padding: 10px 0px;
+    text-align: center;
+    border-bottom: 2px solid #27429b;
+    -webkit-box-shadow: 0px 1px 8px 0px rgba(111, 160, 125, 0.71);
+    box-shadow: 0px 1px 8px 0px rgba(111, 160, 125, 0.71);
+}
+
+.login-box .content-box .sub-text {
+    max-width: 166px;
+    text-align: center;
+    margin: auto;
+    padding-bottom: 15px;
+}
+
+.login-box .content-box .form .input-group-text {
+    padding: 0px 0px;
+    border-right: unset;
+    background: #fff;
+    justify-content: center;
+    width: 45px;
+}
+
+.login-box .content-box .form .input-group-text img {
+    width: 22px;
+    height: 28px;
+    vertical-align: middle;
+    object-fit: contain;
+}
+
+.login-box .content-box .form .input-group .form-control {
+    height: 40px;
+}
+
+img {
+    height: auto;
+}
+
+.main-login .input-group-prepend {
+    height: 100%;
+}

@@ -11,7 +11,7 @@ function DefaultLayout({ children }) {
         <div className={cx('container')}>
             <Sidebar />
             <div className={cx('content')}>
-                <div style={{width: 'calc(100% - 300px)'}}>
+                <div style={{width: 'calc(100% - 250px)'}}>
                     {children}
                 </div>
             </div>

@@ -60,7 +60,7 @@ const Map = ({ lat, lon, zoom, ...props }) => {
                             <Tooltip>
                                 {machine.name}
                             </Tooltip>
-                            <Popup className={cx('popup__margin')}>
+                            {/* <Popup className={cx('popup__margin')}>
                                 <div className={cx("popup-container")}>
                                     <div className={cx("popup-content")}>
                                         <div className={cx("popup-title")}>{machine.name}</div>
@@ -76,6 +76,55 @@ const Map = ({ lat, lon, zoom, ...props }) => {
                                             <div className={cx("popup-content-item-title")}>Humidity</div>
                                         </div>
                                     </div>
+                                </div>
+                            </Popup> */}
+                            <Popup>
+                                <div>
+                                    <h2 className="card-title text-primary">NM Hồ Hoàn Kiếm</h2>
+                                    <p className="text-muted mt-2 mb-2">Kinh độ: 105.852153 - Vĩ độ: 21.030555</p>
+                                    <p className="text-muted mt-2 mb-2">Địa chỉ: Hoàn Kiếm, Hà Nội, Việt Nam</p>
+                                    <p className="text-muted mt-2 mb-2">Thời gian: 15/12/2021 13:10</p>
+                                    <table className="table mt-2 table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">#</th>
+                                                <th scope="col">Thông số</th>
+                                                <th scope="col">Giá trị</th>
+                                                <th scope="col">Đơn vị</th>
+                                                <th scope="col">Trạng thái thiết bị</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>1</td>
+                                                <td>pH</td>
+                                                <td>7.34</td>
+                                                <td>-</td>
+                                                <td><span className="text-success">●</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>2</td>
+                                                <td>Temp</td>
+                                                <td>23.66</td>
+                                                <td>°C</td>
+                                                <td><span className="text-success">●</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>3</td>
+                                                <td>BOD</td>
+                                                <td>4.48</td>
+                                                <td>mg/l</td>
+                                                <td><span className="text-success">●</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>4</td>
+                                                <td>COD</td>
+                                                <td>10.90</td>
+                                                <td>mg/l</td>
+                                                <td><span className="text-success">●</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </Popup>
                         </Marker>
