@@ -2,121 +2,18 @@
     width: 100%;
 }
 
-// .header-top {
-//     border-radius: 10px;
-//     background: rgb(31, 139, 207);
-//     background: linear-gradient(90deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
-// }
-
-span.title {
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    margin-left: 10px;
+.box-item {
+    height: auto;
+    box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px;
 }
 
-.status-bar {
-    width: 100%;
-    padding: 10px 0;
-    justify-content: space-evenly;
-}
-
-.status-item {
-    height: 110px;
-    width: 280px;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    // justify-content: space-evenly;
-    border-radius: 10px;
-
-    span:nth-last-child(1) {
-        font-size: 22px;
-    }
-}
-
-.btn-custom {
-    color: white;
-    background-color: #db302f;
-    height: 150px;
-    border-radius: 10px;
-    font-size: 22px;
-
-    label {
-        margin-left: 20px;
-    }
-}
-
-label.title {
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 1.6;
-    padding: 0 10px;
-    width: 100%;
-    color: white;
-    border-radius: 10px;
-    background: rgb(31, 139, 207);
-    background: linear-gradient(90deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
-}
-
-.device-info {
-    line-height: 25px;
-
-    .device-index {
-        width: 25px;
-        height: 25px;
-        color: white;
-        border-radius: 8px;
-        background: rgb(31, 139, 207);
-        background: linear-gradient(135deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
-        font-weight: bold;
-    }
-}
-
-.nav-link {
-    color: unset;
-}
-
-.container {
-    height: 395px;
+.label-text {
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-line-clamp: 2; /* Hiển thị tối đa 2 dòng */
+    -webkit-box-orient: vertical;
     overflow: hidden;
-}
-
-.container-table {
-    max-height: 440px;
-    overflow-y: auto;
-
-    table {
-        border-collapse: collapse;
-    
-        thead th {
-            position: sticky;
-            top: -0.5px;
-            background-color: #fff;
-        }
-    
-        th:nth-child(2),
-        th:nth-child(3) {
-            width: 10px;
-        }
-    
-        .status {
-            display: block;
-            width: 20px;
-            height: 20px;
-            margin: auto;
-            border-radius: 50%;
-            background-color: #39c35c;
-        }
-    }
-}
-
-.chart {
-    height: 90%;
-}
-
-.nav-page {
-    line-height: 22px;
-    padding-left: 20px;
-    padding-right: 10px;
+    text-overflow: ellipsis;
+    white-space: normal; /* Cho phép văn bản xuống dòng nếu cần */
+    max-width: 100%;
 }

@@ -1,0 +1,82 @@
+.device-info {
+    line-height: 25px;
+
+    .device-index {
+        width: 25px;
+        height: 25px;
+        color: white;
+        border-radius: 8px;
+        background: rgb(31, 139, 207);
+        background: linear-gradient(135deg, rgba(31, 139, 207, 1) 24%, rgba(85, 208, 242, 1) 100%);
+        font-weight: bold;
+    }
+}
+
+.nav-link {
+    color: unset;
+}
+
+.status-bar {
+    width: 100%;
+    padding: 10px 0;
+    justify-content: space-evenly;
+}
+
+.status-item {
+    height: 110px;
+    width: 280px;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    // justify-content: space-evenly;
+    border-radius: 10px;
+
+    span:nth-last-child(1) {
+        font-size: 22px;
+    }
+}
+
+.container {
+    height: 395px;
+    overflow: hidden;
+    padding-top: 1px;
+}
+
+.container-table {
+    max-height: 440px;
+    overflow-y: auto;
+
+    table {
+        border-collapse: collapse;
+    
+        thead th {
+            // position: sticky;
+            top: -1px;
+            background-color: #fff;
+        }
+    
+        th:nth-child(2),
+        th:nth-child(3) {
+            width: 10px;
+        }
+    
+        .status {
+            display: block;
+            width: 20px;
+            height: 20px;
+            margin: auto;
+            border-radius: 50%;
+            background-color: #39c35c;
+        }
+    }
+}
+
+.chart {
+    height: 90%;
+}
+
+.nav-page {
+    line-height: 22px;
+    padding-left: 20px;
+    padding-right: 10px;
+}

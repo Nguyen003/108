@@ -1,62 +1,14 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import { NavLink } from 'react-router-dom';
 import classNames from 'classnames/bind';
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 import styles from './Home.module.scss'
-import config from '~/router/config-router'
-import { ChartBar } from '~/component/Chart';
 import { listLocations } from '~/services/LocationsServices';
-import CameraPopup from '~/component/Popup/Camera';
-import { cam1, cam2, cam3, cam4 } from '~/assets/images';
+import { PieChart } from '~/component/Chart';
+import Detail from '~/component/Detail';
+import { DataTestStatiton } from '~/DataTest';
 
 const cx = classNames.bind(styles);
-
-const waterData = [
-    {
-        id: "sach",
-        name: "Nước sạch (2)",
-        stations: [
-            { name: "Cấp nước Gia Định", numDevices: '10/13' },
-            { name: "Cấp nước quân khu", numDevices: '9/13' }
-        ]
-    },
-    {
-        id: "thai",
-        name: "Nước thải (1)",
-        stations: [
-            { name: "Cấp nước Gia Định", numDevices: '13/13' }
-        ]
-    }
-];
-
-const devices = [
-    { name: 'Thiết bị 1', status: 'signal-lost' },
-    { name: 'Thiết bị 2', status: 'threshold-exceeded' },
-    { name: 'Thiết bị 3', status: 'threshold-warning' },
-    { name: 'Thiết bị 1', status: 'signal-lost' },
-    { name: 'Thiết bị 2', status: 'threshold-exceeded' },
-    { name: 'Thiết bị 3', status: 'signal-lost' },
-    { name: 'Thiết bị 1', status: 'within-threshold' },
-    { name: 'Thiết bị 2', status: 'signal-lost' },
-    { name: 'Thiết bị 3', status: 'threshold-exceeded' },
-    { name: 'Thiết bị 2', status: 'within-threshold' },
-    { name: 'Thiết bị 3', status: 'within-threshold' },
-    { name: 'Thiết bị 2', status: 'within-threshold' },
-    { name: 'Thiết bị 3', status: 'within-threshold' },
-];
-
-const button = [
-    { id: "sach", label: 'Nước sạch' },
-    { id: "thai", label: 'Nước thải' }
-]
-
-const cameras = [
-    { label: 'Cam 1', imageSrc: cam1, altText: 'Camera 1' },
-    { label: 'Cam 2', imageSrc: cam2, altText: 'Camera 2' },
-    { label: 'Cam 3', imageSrc: cam3, altText: 'Camera 3' },
-    { label: 'Cam 4', imageSrc: cam4, altText: 'Camera 4' }
-];
 
 function Home() {
     const [machines, setMachines] = useState([]);
@@ -72,162 +24,70 @@ function Home() {
 
         getMachines();
     }, []);
-    ////////////////////////////////
-    const [imgModal, setImgModal] = useState(null);
-    const handleOpenModal = useCallback((img) => {
-        setImgModal(img);
-    }, []);
+
+    const [selectedBoxId, setSelectedBoxId] = useState(DataTestStatiton[0]?.id || null);
+    const [selectedBoxData, setSelectedBoxData] = useState(DataTestStatiton[0] || null);
+    const handleBoxClick = (id) => {
+        setSelectedBoxId(id);
+    };
+
+    useEffect(() => {
+        const dataById = DataTestStatiton.find(item => item.id === selectedBoxId);
+        setSelectedBoxData(dataById);
+        console.log('Clicked box with id:', dataById);
+    }, [selectedBoxId]);
 
     return (
-        <div className={`ps-4 pe-4 d-flex flex-column ${cx('content-right')}`}>
-            {/* <div className="pt-2 mb-2">
-                <div className="d-flex justify-content-around">
-                    {button.map((item, index) => (
-                        <a key={index} href={`#${item.id}`} className="col-4">
-                            <button className={`w-100 ${cx("btn-custom")}`}>
-                                <i className={`fa-solid ${index === 1 ? "fa-water" : "fa-droplet"}`}></i>
-                                <label>{item.label}</label>
-                            </button>
-                        </a>
+        <>
+            <div className='w-100 d-flex'>
+
+                <div className='w-100 d-flex align-items-center'>
+                    <span className="status-item within-threshold">Đang hoạt động</span>
+                    <span className="status-item threshold-warning">Dừng hoạt động</span>
+                    <span className="status-item threshold-exceeded">Lỗi</span>
+                    <span className="status-item signal-lost">Mất tín hiệu</span>
+                </div>
+            </div>
+            <div className={`ps-4 pe-4 pt-2 pb-2 d-flex flex-column ${cx('content-right')}`}>
+                <aside className="row align-items-center mb-2">
+                    <div className='col-6 text-start mb-1 mt-1 pe-2'>
+                        <label className='fw-bold fs-6'>Đơn vị</label>
+                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
+                            <option value="">Chọn đơn vị</option>
+                            <option value="1">Đơn vị 1</option>
+                            <option value="2">Đơn vị 2</option>
+                            <option value="3">Đơn vị 3</option>
+                        </select>
+                    </div>
+                    <div className='col-6 text-start mb-1 mt-1 ps-2'>
+                        <label className='fw-bold fs-6'>Lĩnh vực</label>
+                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
+                            <option value="">Chọn lĩnh vực</option>
+                            <option value="1">Nước thải</option>
+                            <option value="2">Nước sạch</option>
+                        </select>
+                    </div>
+                </aside>
+                <div className='row mb-2'>
+                    {DataTestStatiton.map((item) => (
+                        <div key={item.id} className='col-2 cursor-pointer mb-3' onClick={() => handleBoxClick(item.id)}>
+                            <div className={`w-100 bg-body-tertiary rounded-3 p-2 ${cx("box-item")}`}>
+                                <PieChart className="w-100" data={item.dataset} />
+                                <label className={`fw-bold fs-5 lh-base mt-3 ps-1 pe-1 ${cx("label-text")}`}>{item.name} ({item.deviceCount})</label>
+                            </div>
+                        </div>
                     ))}
                 </div>
-            </div> */}
-
-            {/* Chi tiết nước sạch và nước thải */}
-            {waterData.map((water, index) => (
-                <div key={index} id={water.id} className="w-100 mt-3 mb-2">
-                    <div className="text-start">
-                        <label className={cx("title")}>
-                            {index === 1 ? <i className="fa-solid fa-water me-2"></i> : <i className="fa-solid fa-droplet me-2"></i>}
-                            {water.name}
-                        </label>
-                    </div>
-                    <div className="mt-2">
-                        {water.stations.map((device, idx) => (
-                            <div key={idx} className="mb-3">
-                                <div className="">
-                                    <div className="d-flex align-items-center">
-                                        <div className={`d-flex col-10 fw-bold ${cx('device-info')}`}>
-                                            <span className={cx('device-index')}>{idx + 1}</span>
-                                            <span className="ms-2">{device.name}</span>
-                                            <span className="ms-2">{device.numDevices} - 17/07/2024 - 03:52</span>
-                                        </div>
-                                        <div className="col-1">
-                                            <button className="btn btn-light p-2 border rounded">
-                                                <NavLink to={{
-                                                    pathname: config.location,
-                                                    search: `?lat=${machines[idx]?.latitude ?? null}&lon=${machines[idx]?.longitude ?? null}`
-                                                }} className={cx("nav-link")}>
-                                                    Bản đồ <i className="fa-solid fa-map-location-dot"></i>
-                                                </NavLink>
-                                            </button>
-                                        </div>
-                                        <div className="col-1 text-end">
-                                            <div className="btn-group">
-                                                <button type="button" className="btn btn-light p-2 border rounded dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    Camera <i className="fa-solid fa-video"></i>
-                                                </button>
-                                                <ul className="dropdown-menu" style={{ cursor: 'pointer' }}>
-                                                    {cameras.map((camera, index) => (
-                                                        <li key={index} className="dropdown-item" data-bs-toggle="modal" data-bs-target="#cameraModal" onClick={() => handleOpenModal(camera.imageSrc)}>
-                                                            {camera.label}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className={`d-flex align-items-center ${cx("status-bar")}`}>
-                                        <div className={`d-flex align-items-center signal-lost ps-4 pe-4 ${cx("status-item")}`}>
-                                            <div className="col-4 fs-1">
-                                                <i className="fa-regular fa-circle-xmark"></i>
-                                            </div>
-                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>TB Mất tín hiệu</span>
-                                                <span>8</span>
-                                            </div>
-                                        </div>
-                                        <div className={`d-flex align-items-center threshold-exceeded ps-4 pe-4 ${cx("status-item")}`}>
-                                            <div className="col-4 fs-1">
-                                                <i className="fa-solid fa-triangle-exclamation"></i>
-                                            </div>
-                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>TB Lỗi</span>
-                                                <span>2</span>
-                                            </div>
-                                        </div>
-                                        <div className={`d-flex align-items-center threshold-warning ps-4 pe-4 ${cx("status-item")}`}>
-                                            <div className="col-4 fs-1">
-                                                <i className="fa-solid fa-circle-pause"></i>
-                                            </div>
-                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>TB Dừng hoạt động</span>
-                                                <span>3</span>
-                                            </div>
-                                        </div>
-                                        <div className={`d-flex align-items-center within-threshold ps-4 pe-4 ${cx("status-item")}`}>
-                                            <div className="col-4 fs-1">
-                                                <i className="fa-solid fa-circle-check"></i>
-                                            </div>
-                                            <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                                <span>TB Đang hoạt động</span>
-                                                <span>4</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={`d-flex mt-2 ${cx("container")}`}>
-                                    <div className={`col-4 ${cx("container-table")}`}>
-                                        <table className="table table-bordered table-hover">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col">Tên thiết bị</th>
-                                                    <th scope="col">Camera</th>
-                                                    <th scope="col">Trạng thái</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {devices.map((device, index) => (
-                                                    <tr key={index}>
-                                                        <td>{device.name}</td>
-                                                        <td>0</td>
-                                                        <td>
-                                                            <span className={cx("status", device.status)}></span>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div className="col-8">
-                                        <div className={cx("chart")}>
-                                            <ChartBar />
-                                        </div>
-                                        <div className={cx("nav-page")}>
-                                            <ul className="nav nav-underline">
-                                                <li className="nav-item">
-                                                    <a className="nav-link active" href="#">Tất cả</a>
-                                                </li>
-                                                <li className="nav-item">
-                                                    <a className="nav-link" href="#">Công suất</a>
-                                                </li>
-                                                <li className="nav-item">
-                                                    <a className="nav-link" href="#">Áp lực</a>
-                                                </li>
-                                                <li className="nav-item">
-                                                    <a className="nav-link">Thời gian hoạt động</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ))}
-            <CameraPopup imageSrc={imgModal} />
-        </div>
+                {selectedBoxData && (
+                    <motion.div
+                        initial={{ y: 100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                        <Detail data={selectedBoxData} />
+                    </motion.div>)}
+            </div>
+        </>
     )
 }
 
