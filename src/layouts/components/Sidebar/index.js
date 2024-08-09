@@ -37,7 +37,7 @@ function Sidebar() {
                         </nav>
                     </div>
                 </aside>
-                <aside className={cx('sidebar-nav', 'select')}>
+                {/* <aside className={cx('sidebar-nav', 'select')}>
                     <div className='mb-2'>
                         <select className={`form-select ${cx("select")}`} aria-label="Default select example">
                             <option value="">Chọn đơn vị</option>
@@ -53,7 +53,7 @@ function Sidebar() {
                             <option value="2">Nước sạch</option>
                         </select>
                     </div>
-                </aside>
+                </aside> */}
             </div>
         </div>
     )
