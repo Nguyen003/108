@@ -49,7 +49,7 @@ function Home() {
                 </div>
             </div>
             <div className={`ps-4 pe-4 pt-2 pb-2 d-flex flex-column ${cx('content-right')}`}>
-                <aside className="row align-items-center mb-2">
+                {/* <aside className="row align-items-center mb-2">
                     <div className='col-6 text-start mb-1 mt-1 pe-2'>
                         <label className='fw-bold fs-6'>Đơn vị</label>
                         <select className={`form-select ${cx("select")}`} aria-label="Default select example">
@@ -67,7 +67,7 @@ function Home() {
                             <option value="2">Nước sạch</option>
                         </select>
                     </div>
-                </aside>
+                </aside> */}
                 <div className='row mb-2'>
                     {DataTestStatiton.map((item) => (
                         <div key={item.id} className='col-2 cursor-pointer mb-3' onClick={() => handleBoxClick(item.id)}>
