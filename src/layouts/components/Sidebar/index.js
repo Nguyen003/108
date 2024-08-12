@@ -35,10 +35,20 @@ function Sidebar() {
                                 <span className={cx('title')}>Bản đồ</span>
                             </NavLink>
                         </nav>
+                        <nav>
+                            <NavLink
+                                to={config.control}
+                                className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
+                            >
+                                <i className="fas fa-user"></i>
+                                <span className={cx('title')}>Điều khiển</span>
+                            </NavLink>
+                        </nav>
                     </div>
                 </aside>
-                {/* <aside className={cx('sidebar-nav', 'select')}>
-                    <div className='mb-2'>
+                <aside className={cx('sidebar-nav', 'select')}>
+                    <div className='mb-2 text-start'>
+                        <label className='fw-bold fs-6 text-light'>Đơn vị</label>
                         <select className={`form-select ${cx("select")}`} aria-label="Default select example">
                             <option value="">Chọn đơn vị</option>
                             <option value="1">Đơn vị 1</option>
@@ -46,14 +56,15 @@ function Sidebar() {
                             <option value="3">Đơn vị 3</option>
                         </select>
                     </div>
-                    <div className='mb-2'>
+                    <div className='mb-2 text-start'>
+                        <label className='fw-bold fs-6 text-light'>Lĩnh vực</label>
                         <select className={`form-select ${cx("select")}`} aria-label="Default select example">
                             <option value="">Chọn lĩnh vực</option>
                             <option value="1">Nước thải</option>
                             <option value="2">Nước sạch</option>
                         </select>
                     </div>
-                </aside> */}
+                </aside>
             </div>
         </div>
     )
