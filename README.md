@@ -3,7 +3,7 @@ Launch the backend (NodeJS, Express):
 ```
 $ cd server
 $ npm install
-$ node sever.js
+$ node server.js
 ```
 
 Launch the frontend (React):
