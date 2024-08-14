@@ -19,10 +19,7 @@ const devices = [
     { name: 'Tủ điện 1', status: 'within-threshold' },
     { name: 'Tủ điện 2', status: 'signal-lost' },
     { name: 'Tủ điện 3', status: 'threshold-exceeded' },
-    { name: 'Tủ điện 2', status: 'within-threshold' },
-    { name: 'Tủ điện 3', status: 'within-threshold' },
-    { name: 'Tủ điện 2', status: 'within-threshold' },
-    { name: 'Tủ điện 3', status: 'within-threshold' },
+    { name: 'Tủ điện 2', status: 'within-threshold' }
 ];
 
 const cameras = [

@@ -1,10 +1,11 @@
-import '~/assets/css/util.css';
 import 'react-toastify/dist/ReactToastify.css';
 // import classNames from 'classnames/bind';
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
+import '~/assets/css/util.css';
 import './Login.scss'
 import { logo } from '~/assets/images'
 import config from '~/router/config-router'
@@ -16,11 +17,16 @@ function Login() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleLogin = () => {
-
-        if (username === "admin" && password === "12345") {
-            navigate(config.home);
-        } else {
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('/api/login', { username: username, password: password }).catch((err) => {
+                toast.error(err.message);
+            });
+            
+            if (response.status === 200) {
+                navigate(config.home); // Điều hướng đến trang chính sau khi đăng nhập thành công
+            }
+        } catch (error) {
             toast.error('Tên đăng nhập hoặc mật khẩu không đúng', {
                 position: "top-right",
                 autoClose: 3000,
