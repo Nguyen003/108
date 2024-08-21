@@ -19,26 +19,27 @@ function Login() {
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('/api/login', { username: username, password: password }).catch((err) => {
-                toast.error(err.message);
-            });
-            
+            const response = await axios.post('/api/login', { username, password });
+
             if (response.status === 200) {
                 navigate(config.home); // Điều hướng đến trang chính sau khi đăng nhập thành công
             }
         } catch (error) {
-            toast.error('Tên đăng nhập hoặc mật khẩu không đúng', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+            toast.error(error.response?.data?.message,
+                {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                }
+            );
+            console.error('Lỗi đăng nhập:', error);
         }
-    }
+    };
 
     return (
         <main className="main-login">

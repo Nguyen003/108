@@ -96,12 +96,12 @@ function PieChart({ data }) {
         datasets: [
             {
                 label: 'data',
-                data: data,
+                data: [data.TotalActive, data.TotalStopped, data.TotalError, data.TotalNoSignal],
                 backgroundColor: [
-                    '#9294a3',
-                    '#db302f',
-                    '#e6b701',
                     '#39c35c',
+                    '#e6b701',
+                    '#db302f',
+                    '#9294a3',
                 ]
             },
         ],
