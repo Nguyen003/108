@@ -15,7 +15,24 @@ function Sidebar() {
                 <img src={logo} alt="Logo" />
             </div>
             <div className="d-flex flex-column">
-                <aside className={`mb-3 pb-2 ${cx('sidebar-nav', 'menu')}`}>
+                <aside className={cx('sidebar-nav', 'select')}>
+                    <div className='mb-2 text-start'>
+                        <label className='fw-bold fs-6 text-light'>Đơn vị</label>
+                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
+                            <option value="1">Đơn vị 1</option>
+                            <option value="2">Đơn vị 2</option>
+                            <option value="3">Đơn vị 3</option>
+                        </select>
+                    </div>
+                    <div className='mb-2 text-start'>
+                        <label className='fw-bold fs-6 text-light'>Lĩnh vực</label>
+                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
+                            <option value="2">Nước sạch</option>
+                            <option value="1">Nước thải</option>
+                        </select>
+                    </div>
+                </aside>
+                <aside className={`mb-3 pt-2 pb-1 ${cx('sidebar-nav', 'menu')}`}>
                     <div className={`h-100 mb-2 ${cx('menu-content')}`}>
                         <nav>
                             <NavLink
@@ -46,25 +63,7 @@ function Sidebar() {
                         </nav>
                     </div>
                 </aside>
-                <aside className={cx('sidebar-nav', 'select')}>
-                    <div className='mb-2 text-start'>
-                        <label className='fw-bold fs-6 text-light'>Đơn vị</label>
-                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
-                            <option value="">Chọn đơn vị</option>
-                            <option value="1">Đơn vị 1</option>
-                            <option value="2">Đơn vị 2</option>
-                            <option value="3">Đơn vị 3</option>
-                        </select>
-                    </div>
-                    <div className='mb-2 text-start'>
-                        <label className='fw-bold fs-6 text-light'>Lĩnh vực</label>
-                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
-                            <option value="">Chọn lĩnh vực</option>
-                            <option value="1">Nước thải</option>
-                            <option value="2">Nước sạch</option>
-                        </select>
-                    </div>
-                </aside>
+
             </div>
         </div>
     )

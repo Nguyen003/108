@@ -1,26 +1,16 @@
 import classNames from "classnames/bind"
 import { NavLink } from 'react-router-dom';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import axios from "axios";
 
 import styles from "./Control.module.scss"
 import config from '~/router/config-router'
 import { cam1, cam2, cam3, cam4, sodo } from '~/assets/images';
 import CameraPopup from '~/component/Popup/Camera';
+import { useLightControl } from "~/hooks/useLightControl";
+import { statusClasses } from "~/common/statusClasses";
 
 const cx = classNames.bind(styles);
-
-const devices = [
-    { name: 'Tủ điện 1', status: 'signal-lost' },
-    { name: 'Tủ điện 2', status: 'threshold-exceeded' },
-    { name: 'Tủ điện 3', status: 'threshold-warning' },
-    { name: 'Tủ điện 1', status: 'signal-lost' },
-    { name: 'Tủ điện 2', status: 'threshold-exceeded' },
-    { name: 'Tủ điện 3', status: 'signal-lost' },
-    { name: 'Tủ điện 1', status: 'within-threshold' },
-    { name: 'Tủ điện 2', status: 'signal-lost' },
-    { name: 'Tủ điện 3', status: 'threshold-exceeded' },
-    { name: 'Tủ điện 2', status: 'within-threshold' }
-];
 
 const cameras = [
     { label: 'Cam 1', imageSrc: cam1, altText: 'Camera 1' },
@@ -30,9 +20,50 @@ const cameras = [
 ];
 
 function Control() {
+    const { light1Status, light2Status, handleOnOffLight } = useLightControl();
     const [imgModal, setImgModal] = useState(null);
+    const [stations, setStations] = useState(null);
+    const [devices, setDevices] = useState(null);
+
     const handleOpenModal = useCallback((img) => {
         setImgModal(img);
+    }, []);
+
+    const handleSelectChange = (code) => {
+        fetchDevices(code);
+    };
+
+    const fetchStations = async () => {
+        try {
+            const response = await axios.get('/api/control/station', {
+                params: { unit: '001', field: 'NS' }
+            });
+
+            const stationsData = response.data;
+            setStations(stationsData);
+            if (stationsData.length > 0) {
+                const firstStationId = stationsData[0].StationCode;
+                fetchDevices(firstStationId); // Lấy thiết bị cho trạm đầu tiên
+            }
+        } catch (err) {
+            console.error('Error fetching stations:', err);
+        }
+    };
+
+    const fetchDevices = async (id) => {
+        try {
+            const response = await axios.get('/api/control/device', {
+                params: { stationCode: id }
+            });
+            const devicesData = response.data;
+            setDevices(devicesData);
+        } catch (err) {
+            console.error('Error fetching devices:', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchStations();
     }, []);
 
     return (
@@ -42,11 +73,15 @@ function Control() {
                     <div className="">
                         <div className="d-flex align-items-center">
                             <div className={`d-flex col-10 fw-bold ${cx('device-info')}`}>
-                                {/* <span className={cx('device-index')}>{idx + 1}</span> */}
-                                <select className="form-select ms-2 fs-5">
-                                    <option>Tên Trạm</option>
+                                <select className="form-select ms-2 fs-5" onChange={(e) => handleSelectChange(e.target.value)}>
+                                    {stations && stations.length > 0 ? (
+                                        stations.map((device, index) => (
+                                            <option key={index} value={device.StationCode}>{device.Name}</option>
+                                        ))
+                                    ) : (
+                                        <option value="">Không có dữ liệu</option>
+                                    )}
                                 </select>
-                                {/* <span className="ms-2"> - 17/07/2024 - 03:52</span> */}
                             </div>
                             <div className='col-2 d-flex justify-content-evenly'>
                                 <button className="btn btn-light p-2 border rounded">
@@ -77,8 +112,8 @@ function Control() {
                                     <i className="fa-regular fa-circle-xmark"></i>
                                 </div>
                                 <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Mất tín hiệu</span>
-                                    <span>8</span>
+                                    <span>TB Đang hoạt động</span>
+                                    <span>{devices?.[0]?.TotalActive ?? '0'}</span>
                                 </div>
                             </div>
                             <div className={`d-flex align-items-center threshold-exceeded ps-4 pe-4 ${cx("status-item")}`}>
@@ -86,8 +121,8 @@ function Control() {
                                     <i className="fa-solid fa-triangle-exclamation"></i>
                                 </div>
                                 <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Lỗi</span>
-                                    <span>2</span>
+                                    <span>TB Dừng hoạt động</span>
+                                    <span>{devices?.[0]?.TotalStopped ?? '0'}</span>
                                 </div>
                             </div>
                             <div className={`d-flex align-items-center threshold-warning ps-4 pe-4 ${cx("status-item")}`}>
@@ -95,8 +130,8 @@ function Control() {
                                     <i className="fa-solid fa-circle-pause"></i>
                                 </div>
                                 <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Dừng hoạt động</span>
-                                    <span>3</span>
+                                    <span>TB Lỗi</span>
+                                    <span>{devices?.[0]?.TotalError ?? '0'}</span>
                                 </div>
                             </div>
                             <div className={`d-flex align-items-center within-threshold ps-4 pe-4 ${cx("status-item")}`}>
@@ -104,8 +139,8 @@ function Control() {
                                     <i className="fa-solid fa-circle-check"></i>
                                 </div>
                                 <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Đang hoạt động</span>
-                                    <span>4</span>
+                                    <span>TB Mất tín hiệu</span>
+                                    <span>{devices?.[0]?.TotalNoSignal ?? '0'}</span>
                                 </div>
                             </div>
                         </div>
@@ -121,25 +156,33 @@ function Control() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {devices.map((device, index) => (
-                                        <tr key={index}>
-                                            <td>{device.name}</td>
-                                            <td>0</td>
-                                            <td>
-                                                <span className={cx("status", device.status)}></span>
-                                            </td>
+                                    {devices && devices.length > 0 ? (
+                                        devices.map((device, index) => (
+                                            <tr key={index}>
+                                                <td>{device.NameDevice}</td>
+                                                <td className='fs-5'>
+                                                    <i className={`bx ${index % 2 === 0 ? 'bxs-video-off' : 'bxs-video'}`}></i>
+                                                </td>
+                                                <td>
+                                                    <span className={cx("status", statusClasses[device.Status])}></span>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td>Không có dữ liệu</td>
                                         </tr>
-                                    ))}
+                                    )}
                                 </tbody>
                             </table>
                         </div>
                         <div className="col-8">
                             <div className="d-flex pe-2">
-                                <button className="btn btn-primary ms-2">
-                                    Bật
+                                <button className="btn btn-primary ms-2" onClick={() => handleOnOffLight('LIGHT_1')}>
+                                    {light1Status === 'Tắt' ? 'Bật' : 'Tắt'} bơm 1
                                 </button>
-                                <button className="btn btn-primary ms-2">
-                                    Tắt
+                                <button className="btn btn-primary ms-2" onClick={() => handleOnOffLight('LIGHT_2')}>
+                                    {light2Status === 'Tắt' ? 'Bật' : 'Tắt'} bơm 2
                                 </button>
                             </div>
                             <div className={cx("img-diagram")}>

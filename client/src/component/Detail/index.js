@@ -8,24 +8,9 @@ import config from '~/router/config-router'
 import { ChartBar } from '~/component/Chart';
 import { cam1, cam2, cam3, cam4 } from '~/assets/images';
 import CameraPopup from '~/component/Popup/Camera';
+import { statusClasses } from "~/common/statusClasses";
 
 const cx = classNames.bind(styles);
-
-const devices = [
-    { name: 'Thiết bị 1', status: 'signal-lost' },
-    { name: 'Thiết bị 2', status: 'threshold-exceeded' },
-    { name: 'Thiết bị 3', status: 'threshold-warning' },
-    { name: 'Thiết bị 1', status: 'signal-lost' },
-    { name: 'Thiết bị 2', status: 'threshold-exceeded' },
-    { name: 'Thiết bị 3', status: 'signal-lost' },
-    { name: 'Thiết bị 1', status: 'within-threshold' },
-    { name: 'Thiết bị 2', status: 'signal-lost' },
-    { name: 'Thiết bị 3', status: 'threshold-exceeded' },
-    { name: 'Thiết bị 2', status: 'within-threshold' },
-    { name: 'Thiết bị 3', status: 'within-threshold' },
-    { name: 'Thiết bị 2', status: 'within-threshold' },
-    { name: 'Thiết bị 3', status: 'within-threshold' },
-];
 
 const cameras = [
     { label: 'Cam 1', imageSrc: cam1, altText: 'Camera 1' },
@@ -38,7 +23,6 @@ function Detail({ data }) {
     const handleOpenModal = useCallback((img) => {
         setImgModal(img);
     }, []);
-
     return (
         <>
             <div className="mt-2 p-2 rounded-2" style={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}>
@@ -47,7 +31,7 @@ function Detail({ data }) {
                         <div className="d-flex align-items-center">
                             <div className={`d-flex col-10 fw-bold ${cx('device-info')}`}>
                                 {/* <span className={cx('device-index')}>{idx + 1}</span> */}
-                                <span className="ms-2 fs-5">{data.name}</span>
+                                <span className="ms-2 fs-5">{data[0]?.NameStation}</span>
                                 {/* <span className="ms-2"> - 17/07/2024 - 03:52</span> */}
                             </div>
                             <div className='col-2 d-flex justify-content-between'>
@@ -123,12 +107,14 @@ function Detail({ data }) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {devices.map((device, index) => (
+                                    {data.map((device, index) => (
                                         <tr key={index}>
-                                            <td>{device.name}</td>
-                                            <td>0</td>
+                                            <td>{device.NameDevice}</td>
+                                            <td className='fs-5'>
+                                                <i className={`bx ${index % 2 === 0 ? 'bxs-video-off' : 'bxs-video'}`}></i>
+                                            </td>
                                             <td>
-                                                <span className={cx("status", device.status)}></span>
+                                                <span className={cx("status", statusClasses[device.Status])}></span>
                                             </td>
                                         </tr>
                                     ))}

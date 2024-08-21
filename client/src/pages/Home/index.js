@@ -1,46 +1,72 @@
 import classNames from 'classnames/bind';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 import styles from './Home.module.scss'
-import { listLocations } from '~/services/LocationsServices';
+// import { listLocations } from '~/services/LocationsServices';
 import { PieChart } from '~/component/Chart';
 import Detail from '~/component/Detail';
-import { DataTestStatiton } from '~/DataTest';
 
 const cx = classNames.bind(styles);
 
 function Home() {
-    const [machines, setMachines] = useState([]);
-    useEffect(() => {
-        const getMachines = async () => {
-            try {
-                const data = await listLocations();
-                setMachines(data);
-            } catch (error) {
-                console.error('Error fetching machines:', error);
+    // const [machines, setMachines] = useState([]);
+    // useEffect(() => {
+    //     const getMachines = async () => {
+    //         try {
+    //             const data = await listLocations();
+    //             setMachines(data);
+    //         } catch (error) {
+    //             console.error('Error fetching machines:', error);
+    //         }
+    //     };
+
+    //     getMachines();
+    // }, []);
+
+    const [stations, setStations] = useState([]);
+    const [devices, setDevices] = useState([]);
+
+    const fetchStations = async () => {
+        try {
+            const response = await axios.get('/api/home/station', {
+                params: { unit: '001', field: 'NS' }
+            });
+
+            const stationsData = response.data;
+            setStations(stationsData);
+            if (stationsData.length > 0) {
+                const firstStationId = stationsData[0].StationCode;
+                fetchDevices(firstStationId); // Lấy thiết bị cho trạm đầu tiên
             }
-        };
+        } catch (err) {
+            console.error('Error fetching stations:', err);
+        }
+    };
+    const fetchDevices = async (id) => {
+        try {
+            const response = await axios.get('/api/home/device', {
+                params: { stationCode: id }
+            });
+            const devicesData = response.data;
+            setDevices(devicesData);
+        } catch (err) {
+            console.error('Error fetching devices:', err);
+        }
+    };
 
-        getMachines();
-    }, []);
-
-    const [selectedBoxId, setSelectedBoxId] = useState(DataTestStatiton[0]?.id || null);
-    const [selectedBoxData, setSelectedBoxData] = useState(DataTestStatiton[0] || null);
     const handleBoxClick = (id) => {
-        setSelectedBoxId(id);
+        fetchDevices(id);
     };
 
     useEffect(() => {
-        const dataById = DataTestStatiton.find(item => item.id === selectedBoxId);
-        setSelectedBoxData(dataById);
-        console.log('Clicked box with id:', dataById);
-    }, [selectedBoxId]);
+        fetchStations();
+    }, []);
 
     return (
         <>
             <div className='w-100 d-flex'>
-
                 <div className='w-100 d-flex align-items-center'>
                     <span className="status-item within-threshold">Đang hoạt động</span>
                     <span className="status-item threshold-warning">Dừng hoạt động</span>
@@ -69,23 +95,22 @@ function Home() {
                     </div>
                 </aside> */}
                 <div className='row mb-2'>
-                    {DataTestStatiton.map((item) => (
-                        <div key={item.id} className='col-2 cursor-pointer mb-3' onClick={() => handleBoxClick(item.id)}>
+                    {stations.map((item) => (
+                        <div key={item.StationCode} className='col-2 cursor-pointer mb-3' onClick={() => handleBoxClick(item.StationCode)}>
                             <div className={`w-100 bg-body-tertiary rounded-3 p-2 ${cx("box-item")}`}>
-                                <PieChart className="w-100" data={item.dataset} />
-                                <label className={`fw-bold fs-5 lh-base mt-3 ps-1 pe-1 ${cx("label-text")}`}>{item.name} ({item.deviceCount})</label>
+                                <PieChart className="w-100" data={item} />
+                                <label className={`fw-bold fs-5 lh-base mt-3 ps-1 pe-1 ${cx("label-text")}`}>{item.StationName} ({item.TotalDevices})</label>
                             </div>
                         </div>
                     ))}
                 </div>
-                {selectedBoxData && (
-                    <motion.div
-                        initial={{ y: 100, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                    >
-                        <Detail data={selectedBoxData} />
-                    </motion.div>)}
+                <motion.div
+                    initial={{ y: 100, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <Detail data={devices} />
+                </motion.div>
             </div>
         </>
     )
