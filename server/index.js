@@ -6,6 +6,7 @@ import { Server } from 'socket.io';
 import net from 'net';
 
 // import configCors from "./config/fixCORS.js"
+import commonRouter from './routes/commonRoutes.js';
 import userRouter from './routes/userRoutes.js';
 import homeRouter from './routes/homeRoutes.js';
 import controlRouter from './routes/controlRoutes.js';
@@ -33,6 +34,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api', userRouter)
 app.use('/api', homeRouter)
 app.use('/api', controlRouter)
+app.use('/api', commonRouter)
 
 //Test TCP////////////////
 //open cors for FE connect socket

@@ -1,11 +1,12 @@
 import React from 'react';
-import { Line, Pie } from 'react-chartjs-2';
+import { Pie, Bar } from 'react-chartjs-2';
 import {
     Chart as ChartJS,
     CategoryScale,
     LinearScale,
     LineElement,
     PointElement,
+    BarElement,
     Title,
     Tooltip,
     Legend,
@@ -18,10 +19,11 @@ ChartJS.register(
     LinearScale,
     LineElement,
     PointElement,
-    ArcElement,
+    BarElement,
     Title,
     Tooltip,
     Legend,
+    ArcElement,
     ChartDataLabels
 );
 
@@ -56,38 +58,52 @@ function ChartBar({ data, labels = labelsTest }) {
                         return ''; // Ẩn tiêu đề bằng cách trả về chuỗi rỗng
                     },
                     label: function (context) {
-                        return context.raw;
+                        return context.dataset.label + ': ' + (context.raw === 1 ? 'Đang chạy' : 'Dừng');
                     }
                 }
             }
         },
         scales: {
-            y: {
-                beginAtZero: true,
-                title: {
-                    display: true,
-                    // text: 'Thời gian chạy'.toUpperCase(),
-                },
-            },
-            x: {
-                title: {
-                    display: true,
-                    // text: 'Thời điểm'.toUpperCase(),
-                },
-            },
-        },
+			y: {
+				beginAtZero: true,
+				max: 1, // Giới hạn tối đa của trục y là 1
+				title: {
+					display: false,
+					text: 'Trạng thái bơm',
+				},
+				ticks: {
+					// stepSize: 1, // Chỉ hiển thị 0 và 1 trên trục y
+					callback: function(value) {
+						if (value === 0) return 'Dừng';
+						if (value === 1) return 'Chạy';
+						return ''; // Không hiển thị các giá trị khác
+					}
+				},
+			},
+			x: {
+				title: {
+					display: false,
+					text: 'Thời điểm',
+				},
+			},
+		},
     };
     const datasets = {
         labels,
         datasets: [
             {
-                label: 'Dataset1',
-                data: ['10', '20', '60', '40', '55', '23', '13', '43', '50', '10', '5', '28'],
+                label: 'Bơm 1',
+                data: [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0], // Dữ liệu mẫu: 1 là đang chạy, 0 là dừng
                 backgroundColor: '#5A9CD6',
+            },
+            {
+                label: 'Bơm 2',
+                data: [0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1], // Dữ liệu mẫu: 0 là dừng, 1 là đang chạy
+                backgroundColor: '#FF6384',
             }
         ],
     };
-    return <Line options={options} data={datasets} />;
+    return <Bar options={options} data={datasets} />;
 }
 
 function PieChart({ data }) {
