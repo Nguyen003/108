@@ -127,14 +127,14 @@ function Detail({ data }) {
                             </div>
                             <div className={cx("nav-page")}>
                                 <ul className="nav nav-underline">
-                                    <li className="nav-item">
+                                    {/* <li className="nav-item">
                                         <a className="nav-link active" href="#">Công suất</a>
                                     </li>
                                     <li className="nav-item">
                                         <a className="nav-link" href="#">Áp lực</a>
-                                    </li>
+                                    </li> */}
                                     <li className="nav-item">
-                                        <a className="nav-link">Thời gian hoạt động</a>
+                                        <a className="nav-link active">Thời gian hoạt động</a>
                                     </li>
                                 </ul>
                             </div>
