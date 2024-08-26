@@ -75,9 +75,9 @@ function Control() {
         return (
             <div>
                 <motion.div
-                    initial={{ y: -100, opacity: 0 }}
+                    initial={{ y: -50, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 0.3 }}
                 >
                     <div className="mt-2 p-2 rounded-2">
                         <div className="">

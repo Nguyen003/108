@@ -1,13 +1,11 @@
 const net = require('net');
 
 const EVENT = {
-  TURN_ON: '01',
+  TURN_ON: '#10010001',
   TURN_OFF: '10',
 };
 
 const RESPONSE = {
-  // ON: '$EMS,1351219863,GET,2000#',
-  // OFF: '$EMS,1351219863,GET,2002#',
   ON: '#10010001',
   OFF: '10',
 };

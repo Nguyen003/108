@@ -7,8 +7,6 @@ const EVENTS_OF_EACH_LIGHT = {
     LIGHT_1: {
         TURN_ON: '10',
         TURN_OFF: '01',
-        // TURN_ON: '#00000010',
-        // TURN_OFF: '#00000000',
     },
     LIGHT_2: {
         TURN_ON: '01',
@@ -20,8 +18,6 @@ const VALUES_OF_EACH_LIGHT = {
     LIGHT_1: {
         ON: '#10010010',
         OFF: '01',
-        // ON: '#00000010',
-        // OFF: '#00000000',
     },
     LIGHT_2: {
         ON: '#10010001',
@@ -40,7 +36,8 @@ export const useLightControl = () => {
 
     useEffect(() => {
 
-        getInitValueFromLight();
+        // getInitValueFromLight();
+        socket.on('connect', getInitValueFromLight);
 
         socket.on('GET_INIT_VALUE_FROM_LIGHT', (value) => {
             console.log('GET_INIT_VALUE_FROM_LIGHT received:', value);
@@ -55,15 +52,17 @@ export const useLightControl = () => {
         socket.on('ON_OFF_LIGHT', (value) => {
             console.log('ON_OFF_LIGHT received:', value);
 
-            const statusOfLight1 = getCurrentStatusFromLight('LIGHT_1', value.currentValue);
-            setLight1Status(statusOfLight1 === 'ON' ? 'Bật' : 'Tắt');
-
-            const statusOfLight2 = getCurrentStatusFromLight('LIGHT_2', value.currentValue);
-            setLight2Status(statusOfLight2 === 'ON' ? 'Bật' : 'Tắt');
+            // if (value.type === 'LIGHT_1') {
+                const statusOfLight1 = getCurrentStatusFromLight('LIGHT_1', value.currentValue);
+                setLight1Status(statusOfLight1 === 'ON' ? 'Bật' : 'Tắt');
+            // } else if (value.type === 'LIGHT_2') {
+                const statusOfLight2 = getCurrentStatusFromLight('LIGHT_2', value.currentValue);
+                setLight2Status(statusOfLight2 === 'ON' ? 'Bật' : 'Tắt');
+            // }
         });
 
         return () => {
-            // socket.off('connect', getInitValueFromLight);
+            socket.off('connect', getInitValueFromLight);
             socket.off('GET_INIT_VALUE_FROM_LIGHT');
             socket.off('ON_OFF_LIGHT');
         };
