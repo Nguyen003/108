@@ -1,7 +1,7 @@
 const net = require('net');
 
 const EVENT = {
-  TURN_ON: '10',
+  TURN_ON: '#10010010',
   TURN_OFF: '01',
 };
 

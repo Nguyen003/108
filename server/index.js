@@ -90,7 +90,7 @@ io.on('connection', (socket) => {
         console.log('ON_OFF_LIGHT: ', value);
         sendDataToAllClients(value, TcpConnections);
     });
-
+ 
     socket.on(EVENTS_FROM_WEB.GET_INIT_VALUE_FROM_LIGHT, () => {
         console.log('GET_INIT_VALUE_FROM_LIGHT: ');
         const valueToEmit = {
