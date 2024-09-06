@@ -20,7 +20,7 @@ function App() {
             let Layout = DefaultLayout;
             if (route.layout) {
               Layout = route.layout;
-            } else if (route.path === '/') {
+            } else if (route.path === '/' || route.path === '/register') {
               Layout = Fragment;
             }
             return (
