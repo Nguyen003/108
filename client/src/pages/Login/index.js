@@ -2,7 +2,7 @@ import 'react-toastify/dist/ReactToastify.css';
 // import classNames from 'classnames/bind';
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import '~/assets/css/util.css';
@@ -37,7 +37,6 @@ function Login() {
                     theme: "colored",
                 }
             );
-            console.error('Lỗi đăng nhập:', error);
         }
     };
 
@@ -96,6 +95,9 @@ function Login() {
                                                 />
                                                 <span asp-validation-for="Input.Password" className="text-danger"></span>
                                             </div>
+                                        </div>
+                                        <div className="col-12 text-end" style={{marginTop: '-10px'}}>
+                                            <Link className='fst-italic text-decoration-underline fs-6' to={config.register}>Đăng ký!</Link>
                                         </div>
 
                                         <div className="col-12">
