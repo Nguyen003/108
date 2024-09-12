@@ -7,5 +7,19 @@ import logo from './logo.png';
 import logoTeca from './logotecapro.jpg';
 import sodo from './so_do.jpg';
 import bgLogin from './bg_login.svg';
+import imgKontum from './location-kontum.png';
+import imgPleiku from './location-pleiku.png';
 
-export {cam1, cam2, cam3, cam4, locationIcon, logo, logoTeca, sodo, bgLogin}
+export {
+    cam1,
+    cam2,
+    cam3,
+    cam4,
+    locationIcon,
+    logo,
+    logoTeca,
+    sodo,
+    bgLogin,
+    imgKontum,
+    imgPleiku
+}

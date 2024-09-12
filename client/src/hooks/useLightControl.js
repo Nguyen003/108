@@ -16,11 +16,11 @@ const EVENTS_OF_EACH_LIGHT = {
 
 const VALUES_OF_EACH_LIGHT = {
     LIGHT_1: {
-        ON: '#10010010',
+        ON: '#00000010',
         OFF: '01',
     },
     LIGHT_2: {
-        ON: '#10010001',
+        ON: '#00000001',
         OFF: '10',
     },
 };
@@ -82,7 +82,7 @@ export const useLightControl = () => {
     };
 
     const handleOnOffLight = (light) => {
-        // console.log('light: ' + light);
+        console.log('light: ' + light);
         // console.log('light1Status: ' + light1Status);
 
         if (light === 'LIGHT_1') {

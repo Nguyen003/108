@@ -12,6 +12,7 @@ import homeRouter from './routes/homeRoutes.js';
 import controlRouter from './routes/controlRoutes.js';
 import { handleWhenDeviceOutConnection, sendDataToAllClients } from './DemoDevice/tcp-v2.js';
 import { EVENTS_FROM_WEB } from './DemoDevice/events.js';
+import { insertDeviceData } from './controller/commonController.js';
 
 const app = express();
 const PORT_TCP = process.env.PORT_TCP || 100;
@@ -57,12 +58,12 @@ const server = createServer(app);
 server.listen(PORT_APP, () => console.log(`Lisening Server on port-app `, PORT_APP));
 
 const VALUE_OF_LIGHT_1 = {
-    ON: '#10010010',
+    ON: '#00000010',
     OFF: '01',
 };
 
 const VALUE_OF_LIGHT_2 = {
-    ON: '#10010001',
+    ON: '#00000001',
     OFF: '10',
 };
 
@@ -90,7 +91,7 @@ io.on('connection', (socket) => {
         console.log('ON_OFF_LIGHT: ', value);
         sendDataToAllClients(value, TcpConnections);
     });
- 
+
     socket.on(EVENTS_FROM_WEB.GET_INIT_VALUE_FROM_LIGHT, () => {
         console.log('GET_INIT_VALUE_FROM_LIGHT: ');
         const valueToEmit = {
@@ -103,33 +104,33 @@ io.on('connection', (socket) => {
 });
 
 // TCP
+let latestParseData = null;
 const serverTCP = net.createServer((socket) => {
     TcpConnections.push(socket);
 
     socket.on('data', (data) => {
-        // console.log(data.toString('hex').trim(), 'a')// '#00000010  a'
-        const parseData = data.toString().substr(0, 9);
-        // console.log(ValueOfAllLights.LIGHT_1.allValues.includes(parseData));
-        // var fb1 = new Buffer(parseData);
-        // var fb2 = new Buffer(VALUE_OF_LIGHT_1.ON);
+        const parseData = data.toString().substring(0, 20).match(/#.*?(?=#|$)/g);
+        parseData[1] = parseData[1].substring(1, 5);
+        parseData[2] = parseData[2].substring(1);
+        latestParseData = parseData;
+        console.log(parseData);
 
-        if (ValueOfAllLights.LIGHT_1.allValues.includes(parseData)) {
+        if (ValueOfAllLights.LIGHT_1.allValues.includes(parseData[0])) {
             console.log('den 1')
-            ValueOfAllLights.LIGHT_1.currentValue = parseData;
+            ValueOfAllLights.LIGHT_1.currentValue = parseData[0];
             const valueToEmit = {
                 type: 'LIGHT_1',
-                currentValue: parseData,
+                currentValue: parseData[0],
             };
             io.emit(EVENTS_FROM_WEB.ON_OFF_LIGHT, valueToEmit);
         }
-
-        if (ValueOfAllLights.LIGHT_2.allValues.includes(parseData)) {
+        if (ValueOfAllLights.LIGHT_2.allValues.includes(parseData[0])) {
             console.log('den 2')
 
-            ValueOfAllLights.LIGHT_2.currentValue = parseData;
+            ValueOfAllLights.LIGHT_2.currentValue = parseData[0];
             const valueToEmit = {
                 type: 'LIGHT_2',
-                currentValue: parseData,
+                currentValue: parseData[0],
             };
             io.emit(EVENTS_FROM_WEB.ON_OFF_LIGHT, valueToEmit);
         }
@@ -151,3 +152,12 @@ serverTCP.on('connection', function () {
 serverTCP.listen(PORT_TCP, () => {
     console.log('listening TCP on port', PORT_APP);
 });
+
+setInterval(async() => {
+    try {
+        await insertDeviceData(latestParseData);
+        console.log('Save data successfully every 60s.')
+    } catch (err) {
+        console.error('Save data error every 60s:', err)
+    }
+}, 60000)

@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ const cx = classNames.bind(styles);
 function Home() {
     const [stations, setStations] = useState([]);
     const [devices, setDevices] = useState([]);
+    const selectedStationIdRef = useRef(null);
     const unitValue = useSelector((state) => state.select.selectValueUnit);
     const fieldValue = useSelector((state) => state.select.selectValueField);
 
@@ -24,8 +25,16 @@ function Home() {
 
             const stationsData = response.data;
             setStations(stationsData);
-            const firstStationId = stationsData?.[0]?.StationCode ?? null;
-            fetchDevices(firstStationId); // Lấy thiết bị cho trạm đầu tiên
+            if(selectedStationIdRef.current === null) {
+                console.log('Lần đâu: ', selectedStationIdRef.current);
+                const firstStationId = stationsData?.[0]?.StationCode ?? null;
+                fetchDevices(firstStationId); // Lấy thiết bị cho trạm đầu tiên
+            }
+
+            if(selectedStationIdRef.current != null) {
+                console.log('cập nhật: ', stationsData.some(station => station.StationCode === selectedStationIdRef.current));
+                fetchDevices(selectedStationIdRef.current); // Lấy thiết bị cho trạm đầu tiên
+            }
         } catch (err) {
             console.error('Error fetching stations:', err);
         }
@@ -44,11 +53,22 @@ function Home() {
 
     const handleBoxClick = (id) => {
         fetchDevices(id);
+        selectedStationIdRef.current = id;
     };
 
     useEffect(() => {
+        selectedStationIdRef.current = null;
         fetchStations();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
+        // Tạo interval để gọi fetchStations mỗi 2 phút (120000 milliseconds)
+        const interval = setInterval(() => {
+            fetchStations();
+        }, 5000); // 120000 ms = 2 phút
+
+        // Cleanup interval khi component unmount hoặc khi unitValue, fieldValue thay đổi
+        return () => clearInterval(interval);
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [unitValue, fieldValue]);
 
     if (stations && stations.length > 0) {
@@ -63,25 +83,6 @@ function Home() {
                     </div>
                 </div>
                 <div className={`ps-4 pe-4 pt-2 pb-2 d-flex flex-column ${cx('content-right')}`}>
-                    {/* <aside className="row align-items-center mb-2">
-                    <div className='col-6 text-start mb-1 mt-1 pe-2'>
-                        <label className='fw-bold fs-6'>Đơn vị</label>
-                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
-                            <option value="">Chọn đơn vị</option>
-                            <option value="1">Đơn vị 1</option>
-                            <option value="2">Đơn vị 2</option>
-                            <option value="3">Đơn vị 3</option>
-                        </select>
-                    </div>
-                    <div className='col-6 text-start mb-1 mt-1 ps-2'>
-                        <label className='fw-bold fs-6'>Lĩnh vực</label>
-                        <select className={`form-select ${cx("select")}`} aria-label="Default select example">
-                            <option value="">Chọn lĩnh vực</option>
-                            <option value="1">Nước thải</option>
-                            <option value="2">Nước sạch</option>
-                        </select>
-                    </div>
-                </aside> */}
                     <div className='row mb-2'>
                         {stations.map((item) => (
                             <div key={item.StationCode} className='col-2 cursor-pointer mb-3' onClick={() => handleBoxClick(item.StationCode)}>

@@ -60,8 +60,10 @@ a {
 }
 
 .status-item {
+  font-weight: bold;
+  padding: 8px 0;
   flex: 1;
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .signal-lost {
