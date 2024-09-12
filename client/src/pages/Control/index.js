@@ -25,7 +25,9 @@ function Control() {
     const { light1Status, light2Status, handleOnOffLight } = useLightControl();
     const [imgModal, setImgModal] = useState(null);
     const [stations, setStations] = useState(null);
+    const [dataDevice, setDataDevice] = useState();
     const [devices, setDevices] = useState(null);
+    const [isNoSingle, setIsNoSingle] = useState(false);
     const unitValue = useSelector((state) => state.select.selectValueUnit);
     const fieldValue = useSelector((state) => state.select.selectValueField);
 
@@ -39,9 +41,9 @@ function Control() {
 
     const fetchStations = async () => {
         try {
-            const response = await axios.get('/api/control/station', {
-                params: { unit: unitValue, field: fieldValue }
-            });
+            const [response] = await Promise.all([
+                axios.get('/api/control/station', { params: { unit: unitValue, field: fieldValue } })
+            ]);
 
             const stationsData = response.data;
             setStations(stationsData);
@@ -56,11 +58,24 @@ function Control() {
 
     const fetchDevices = async (id) => {
         try {
-            const response = await axios.get('/api/control/device', {
-                params: { stationCode: id }
-            });
+            const [response] = await Promise.all([
+                axios.get('/api/control/device', { params: { stationCode: id } })
+            ]);
             const devicesData = response.data;
             setDevices(devicesData);
+            setIsNoSingle(devicesData?.[0]?.StatusStation === "NS");
+        } catch (err) {
+            console.error('Error fetching devices:', err);
+        }
+    };
+
+    const fetchMucNcLuuLuong = async () => {
+        try {
+            const [response] = await Promise.all([
+                await axios.get('/api/common/location')
+            ]);
+            const devicesData = response.data;
+            setDataDevice(devicesData);
         } catch (err) {
             console.error('Error fetching devices:', err);
         }
@@ -68,8 +83,17 @@ function Control() {
 
     useEffect(() => {
         fetchStations();
+        fetchMucNcLuuLuong();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [unitValue, fieldValue]);
+
+    useEffect(() => {
+        // Khi devices thay đổi, cập nhật isNoSingle
+        if (devices?.length > 0) {
+            setIsNoSingle(devices[0]?.StatusStation === "NS");
+            console.log(devices[0]?.StatusStation === "NS");
+        }
+    }, [devices]);
 
     if (stations && stations.length > 0) {
         return (
@@ -118,22 +142,13 @@ function Control() {
                                     </div>
                                 </div>
                                 <div className={`d-flex align-items-center ${cx("status-bar")}`}>
-                                    <div className={`d-flex align-items-center signal-lost ps-4 pe-4 ${cx("status-item")}`}>
+                                    <div className={`d-flex align-items-center within-threshold ps-4 pe-4 ${cx("status-item")}`}>
                                         <div className="col-4 fs-1">
-                                            <i className="fa-regular fa-circle-xmark"></i>
+                                            <i className="fa-solid fa-circle-check"></i>
                                         </div>
                                         <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
                                             <span>TB Đang hoạt động</span>
-                                            <span>{devices?.[0]?.TotalActive ?? '0'}</span>
-                                        </div>
-                                    </div>
-                                    <div className={`d-flex align-items-center threshold-exceeded ps-4 pe-4 ${cx("status-item")}`}>
-                                        <div className="col-4 fs-1">
-                                            <i className="fa-solid fa-triangle-exclamation"></i>
-                                        </div>
-                                        <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                            <span>TB Dừng hoạt động</span>
-                                            <span>{devices?.[0]?.TotalStopped ?? '0'}</span>
+                                            <span>{isNoSingle ? '0' : devices?.[0]?.TotalActive ?? '0'}</span>
                                         </div>
                                     </div>
                                     <div className={`d-flex align-items-center threshold-warning ps-4 pe-4 ${cx("status-item")}`}>
@@ -141,18 +156,28 @@ function Control() {
                                             <i className="fa-solid fa-circle-pause"></i>
                                         </div>
                                         <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                            <span>TB Lỗi</span>
-                                            <span>{devices?.[0]?.TotalError ?? '0'}</span>
+                                            <span>TB Dừng hoạt động</span>
+                                            <span>{isNoSingle ? '0' : devices?.[0]?.TotalStopped ?? '0'}</span>
                                         </div>
                                     </div>
-                                    <div className={`d-flex align-items-center within-threshold ps-4 pe-4 ${cx("status-item")}`}>
+                                    <div className={`d-flex align-items-center threshold-exceeded ps-4 pe-4 ${cx("status-item")}`}>
                                         <div className="col-4 fs-1">
-                                            <i className="fa-solid fa-circle-check"></i>
+                                            <i className="fa-solid fa-triangle-exclamation"></i>
                                         </div>
                                         <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                            <span>TB Mất tín hiệu</span>
-                                            <span>{devices?.[0]?.TotalNoSignal ?? '0'}</span>
+                                            <span>TB Lỗi</span>
+                                            <span>{isNoSingle ? '0' : devices?.[0]?.TotalError ?? '0'}</span>
                                         </div>
+                                    </div>
+                                    <div className={`d-flex rounded-4 border border-dark-subtle justify-content-around align-items-center signal-lost ${cx("status-item")}`}>
+                                        <label className="form-check-label d-flex flex-column justify-content-end h-100" htmlFor="thresholdWarning">
+                                            <span className="mb-3 text-light">Mực nước</span>
+                                            <span className="mb-2 text-light">{dataDevice ? dataDevice[0]?.MucNuoc : 0} m</span>
+                                        </label>
+                                        <label className="form-check-label d-flex flex-column justify-content-end h-100" htmlFor="thresholdWarning">
+                                            <span className="mb-3 text-light">Lưu lượng nước</span>
+                                            <span className="mb-2 text-light">{dataDevice ? dataDevice[0]?.LuuLuongNuoc : 0} m³/h</span>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +187,7 @@ function Control() {
                                         <thead>
                                             <tr>
                                                 <th scope="col">Tên thiết bị</th>
-                                                <th scope="col">Camera</th>
+                                                {/* <th scope="col">Camera</th> */}
                                                 <th scope="col">Trạng thái</th>
                                             </tr>
                                         </thead>
@@ -171,11 +196,11 @@ function Control() {
                                                 devices.map((device, index) => (
                                                     <tr key={index}>
                                                         <td>{device.NameDevice}</td>
-                                                        <td className='fs-5'>
+                                                        {/* <td className='fs-5'>
                                                             <i className={`bx ${index % 2 === 0 ? 'bxs-video-off' : 'bxs-video'}`}></i>
-                                                        </td>
+                                                        </td> */}
                                                         <td>
-                                                            <span className={cx("status", statusClasses[device.Status])}></span>
+                                                            <span className={cx("status", statusClasses[device.StatusStation === 'NS' ? 'NS' : device.Status])}></span>
                                                         </td>
                                                     </tr>
                                                 ))

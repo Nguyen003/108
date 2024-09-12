@@ -1,14 +1,16 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { NavLink } from 'react-router-dom';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import axios from 'axios';
 
 import classNames from 'classnames/bind';
 import styles from './Detail.module.scss';
 import config from '~/router/config-router'
-import { ChartBar } from '~/component/Chart';
+import { ChartBar, ChartLine, ChartBarLuuLuongNuoc } from '~/component/Chart';
 import { cam1, cam2, cam3, cam4 } from '~/assets/images';
 import CameraPopup from '~/component/Popup/Camera';
 import { statusClasses } from "~/common/statusClasses";
+import TabsContainer from '../Tabs/TabsContainer';
 
 const cx = classNames.bind(styles);
 
@@ -20,9 +22,64 @@ const cameras = [
 ];
 function Detail({ data }) {
     const [imgModal, setImgModal] = useState(null);
+    const [dataMucNuoc, setDataMucNuoc] = useState(null);
+    const [dataLuuLuongNuoc, setDataLuuLuongNuoc] = useState(null);
+    const [dataTrangThai, setDataTrangThai] = useState({ device1: [], device2: [], totaltime: [] });
+    const tabs = ['Thời gian bơm hoạt động', 'Lưu lượng nước', 'Mực nước'];
+    const panels = [
+        <ChartBar key="bar" data={dataTrangThai} type={data[0]?.NameStation === 'e66/Sư đoàn 10' ? 2 : 1}/>,
+        <ChartBarLuuLuongNuoc key="bar" data={dataLuuLuongNuoc} />,
+        <ChartLine data={dataMucNuoc} />
+    ];
+
     const handleOpenModal = useCallback((img) => {
         setImgModal(img);
     }, []);
+    const getCurrentDate = () => {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
+        const year = today.getFullYear();
+        return `${year}-${month}-${day}`;
+    };
+
+    const fetchData = async (date) => {
+
+        try {
+            // Sử dụng Promise.all để đợi cả hai API cùng lúc
+            const [mucNuocResponse, luuLuongNuocResponse, trangThaiResponse] = await Promise.all([
+                axios.get('/api/home/mucnuoc', { params: { date: date } }),
+                axios.get('/api/home/luuluongnuoc', { params: { date: date } }),
+                axios.get('/api/home/trangthai', { params: { date: date } })
+            ]);
+
+            // Gán dữ liệu vào state sau khi cả hai API đã hoàn thành
+            const mucNuocData = mucNuocResponse.data.map(item => item.AverageFlow);
+            const luuLuongNuocData = luuLuongNuocResponse.data.map(item => item.AverageFlow);
+            const trangThaiDevice1 = trangThaiResponse.data.map(item => item.device1);
+            const trangThaiDevice2 = trangThaiResponse.data.map(item => item.device2);
+            const totaltime = trangThaiResponse.data.map(item => item.totaltime);
+
+            setDataMucNuoc(mucNuocData);
+            setDataLuuLuongNuoc(luuLuongNuocData);
+            setDataTrangThai({ device1: trangThaiDevice1, device2: trangThaiDevice2, totaltime: totaltime });
+
+        } catch (err) {
+            console.error('Lỗi khi fetch dữ liệu:', err);
+        }
+    };
+    useEffect(() => {
+        const currentDate = getCurrentDate();
+        fetchData(currentDate);
+        // Thiết lập interval để gọi API mỗi 10 phút
+        const intervalId = setInterval(() => {
+            fetchData(currentDate);
+        }, 600000);
+
+        // Cleanup function khi component unmount
+        return () => clearInterval(intervalId);
+    }, []);
+
     return (
         <>
             <div className="mt-2 p-2 rounded-2" style={{ boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px' }}>
@@ -57,52 +114,14 @@ function Detail({ data }) {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className={`d-flex align-items-center ${cx("status-bar")}`}>
-                            <div className={`d-flex align-items-center signal-lost ps-4 pe-4 ${cx("status-item")}`}>
-                                <div className="col-4 fs-1">
-                                    <i className="fa-regular fa-circle-xmark"></i>
-                                </div>
-                                <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Mất tín hiệu</span>
-                                    <span>8</span>
-                                </div>
-                            </div>
-                            <div className={`d-flex align-items-center threshold-exceeded ps-4 pe-4 ${cx("status-item")}`}>
-                                <div className="col-4 fs-1">
-                                    <i className="fa-solid fa-triangle-exclamation"></i>
-                                </div>
-                                <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Lỗi</span>
-                                    <span>2</span>
-                                </div>
-                            </div>
-                            <div className={`d-flex align-items-center threshold-warning ps-4 pe-4 ${cx("status-item")}`}>
-                                <div className="col-4 fs-1">
-                                    <i className="fa-solid fa-circle-pause"></i>
-                                </div>
-                                <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Dừng hoạt động</span>
-                                    <span>3</span>
-                                </div>
-                            </div>
-                            <div className={`d-flex align-items-center within-threshold ps-4 pe-4 ${cx("status-item")}`}>
-                                <div className="col-4 fs-1">
-                                    <i className="fa-solid fa-circle-check"></i>
-                                </div>
-                                <div className="col-8 d-flex flex-column-reverse justify-content-evenly">
-                                    <span>TB Đang hoạt động</span>
-                                    <span>4</span>
-                                </div>
-                            </div>
-                        </div> */}
                     </div>
                     <div className={`d-flex mt-2 ${cx("container")}`}>
-                        <div className={`col-4 ${cx("container-table")}`}>
+                        <div className={`col-3 ${cx("container-table")}`}>
                             <table className="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th scope="col">Tên thiết bị</th>
-                                        <th scope="col">Camera</th>
+                                        {/* <th scope="col">Camera</th> */}
                                         <th scope="col">Trạng thái</th>
                                     </tr>
                                 </thead>
@@ -110,34 +129,19 @@ function Detail({ data }) {
                                     {data.map((device, index) => (
                                         <tr key={index}>
                                             <td>{device.NameDevice}</td>
-                                            <td className='fs-5'>
+                                            {/* <td className='fs-5'>
                                                 <i className={`bx ${index % 2 === 0 ? 'bxs-video-off' : 'bxs-video'}`}></i>
-                                            </td>
+                                            </td> */}
                                             <td>
-                                                <span className={cx("status", statusClasses[device.Status])}></span>
+                                                <span className={cx("status", statusClasses[device.StatusStation === 'NS' ? 'NS' : device.Status])}></span>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         </div>
-                        <div className="col-8">
-                            <div className={cx("chart")}>
-                                <ChartBar />
-                            </div>
-                            <div className={cx("nav-page")}>
-                                <ul className="nav nav-underline">
-                                    {/* <li className="nav-item">
-                                        <a className="nav-link active" href="#">Công suất</a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a className="nav-link" href="#">Áp lực</a>
-                                    </li> */}
-                                    <li className="nav-item">
-                                        <a className="nav-link active">Thời gian hoạt động</a>
-                                    </li>
-                                </ul>
-                            </div>
+                        <div className="col-9 ps-1">
+                            <TabsContainer tabs={tabs} panels={panels} />
                         </div>
                     </div>
                 </div>
