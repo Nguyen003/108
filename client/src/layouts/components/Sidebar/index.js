@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect, useState } from 'react';
 import classNames from 'classnames/bind';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 
 import styles from './Sidebar.module.scss'
 import config from '~/router/config-router'
@@ -15,12 +16,14 @@ function Sidebar() {
     const dispatch = useDispatch();
     const [units, setUnits] = useState([]);
     const [fields, setFields] = useState([]);
+    const unitValue = useSelector((state) => state.select.selectValueUnit);
+    const isAdmin = useSelector((state) => state.select.isAdmin);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const [unitResponse, fieldResponse] = await Promise.all([
-                    axios.get('/api/common/unitAll'),
+                    axios.get('/api/common/unitAll', { params: { unitCode: unitValue } }),
                     axios.get('/api/common/fieldAll')
                 ]);
 
@@ -39,7 +42,7 @@ function Sidebar() {
         };
 
         fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -87,15 +90,17 @@ function Sidebar() {
                                 <span className={cx('title')}>Bản đồ</span>
                             </NavLink>
                         </nav>
-                        <nav>
-                            <NavLink
-                                to={config.control}
-                                className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
-                            >
-                                <i className="fas fa-user"></i>
-                                <span className={cx('title')}>Điều khiển</span>
-                            </NavLink>
-                        </nav>
+                        {isAdmin && (
+                            <nav>
+                                <NavLink
+                                    to={config.control}
+                                    className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
+                                >
+                                    <i className="fas fa-user"></i>
+                                    <span className={cx('title')}>Điều khiển</span>
+                                </NavLink>
+                            </nav>
+                        )}
                     </div>
                 </aside>
 

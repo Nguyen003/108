@@ -4,15 +4,18 @@ import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
 
 import '~/assets/css/util.css';
 import './Login.scss'
 import { logo } from '~/assets/images'
 import config from '~/router/config-router'
+import { setSelectValueUnit, setIsAdmin } from '~/store';
 
 // const cx = classNames.bind(styles)
 
 function Login() {
+    const dispatch = useDispatch();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
@@ -20,8 +23,10 @@ function Login() {
     const handleLogin = async () => {
         try {
             const response = await axios.post('/api/login', { username, password });
-
+            
             if (response.status === 200) {
+                dispatch(setIsAdmin(response.data.data === null ? true : false)); // Cập nhật trạng thái người dùng đăng nhập là admin hay không
+                dispatch(setSelectValueUnit(response.data.data));
                 navigate(config.home); // Điều hướng đến trang chính sau khi đăng nhập thành công
             }
         } catch (error) {

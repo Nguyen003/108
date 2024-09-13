@@ -69,7 +69,7 @@ function Location() {
             <div className="col-3 pt-2 ps-2 pe-2">
                 <div>
                     <div className={cx('title')}>
-                        <span className="d-block">Trạng thái dữ liệu</span>
+                        <span className="d-block">Trạng thái</span>
                     </div>
                     <div className={`d-flex flex-wrap align-items-center ${cx("status-bar")}`}>
                         <div className={`within-threshold position-relative ${cx("status-item")}`}>

@@ -34,7 +34,7 @@ export const login = async (req, res) => {
         }
 
         // Nếu mật khẩu hợp lệ, trả về thông tin người dùng hoặc JWT token
-        res.status(200).json({ message: 'Đăng nhập thành công!' });
+        res.status(200).json({ message: 'Đăng nhập thành công!', data: user.UnitCode });
     } catch (error) {
         console.error('Error during login:', error);
         res.status(500).json({ message: 'Internal server error' });

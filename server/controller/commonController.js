@@ -6,9 +6,11 @@ import { GET_ALL_UNIT } from '../query/unitQuery.js'
 import { INSERT_TABLE_DEVICEDATA, GET_MUCNC_LUULUONG } from '../query/commonQueries.js'
 
 export const getAllUnit = async (req, res) => {
+    const { unitCode } = req.query;
+
     try {
         const data = await new Promise((resolve, reject) => {
-            db.all(GET_ALL_UNIT, [], (err, rows) => {
+            db.all(GET_ALL_UNIT, [unitCode, unitCode, unitCode], (err, rows) => {
                 if (err) {
                     reject(err);
                     return;
@@ -19,7 +21,7 @@ export const getAllUnit = async (req, res) => {
 
         res.status(200).json(data);
     } catch (err) {
-        console.error('getAllUnit_commonController:', error);
+        console.error('getAllUnit_commonController:', err);
         res.status(500).json({ message: 'Internal server error' });
     }
 };
@@ -45,7 +47,7 @@ export const getAllField = async (req, res) => {
 
 export const getMucNCLuuLuong = async (req, res) => {
     const currentDate = moment().format('YYYY-MM-DD');
-    
+
     try {
         const data = await new Promise((resolve, reject) => {
             db.all(GET_MUCNC_LUULUONG, [currentDate], (err, rows) => {
@@ -56,7 +58,7 @@ export const getMucNCLuuLuong = async (req, res) => {
                 resolve(rows);
             });
         });
-        
+
         res.status(200).json(data);
     } catch (err) {
         console.error('getMucNCLuuLuong_commonController:', err);
@@ -66,7 +68,7 @@ export const getMucNCLuuLuong = async (req, res) => {
 
 export const insertDeviceData = (data) => {
     const currentDate = moment().format('YYYY-MM-DD HH:mm:ss');
-    
+
     return new Promise((resolve, reject) => {
         db.run(INSERT_TABLE_DEVICEDATA, [data[0], data[2], data[1], currentDate], (err) => {
             if (err) {
