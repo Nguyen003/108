@@ -5,7 +5,8 @@ const selectSlice = createSlice({
     name: "select",
     initialState: {
         selectValueUnit: "",
-        selectValueField: ""
+        selectValueField: "",
+        isAdmin: false // Biến này để xác đ��nh người dùng đang đăng nhập có phải là admin hay không.
     },
     reducers: {
         setSelectValueUnit: (state, action) => {
@@ -13,12 +14,15 @@ const selectSlice = createSlice({
         },
         setSelectValueField: (state, action) => { 
             state.selectValueField = action.payload;
+        },
+        setIsAdmin: (state, action) => { 
+            state.isAdmin = action.payload;
         }
     }
 })
 
 // Xuất các actions
-export const { setSelectValueUnit, setSelectValueField } = selectSlice.actions;
+export const { setSelectValueUnit, setSelectValueField, setIsAdmin } = selectSlice.actions;
 
 // cấu hình stored
 export const store = configureStore({

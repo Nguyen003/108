@@ -10,6 +10,7 @@ import config from "~/router/config-router"
 const cx = classNames.bind(styles)
 
 function Register() {
+    const [units, setUnits] = useState();
     const navigate = useNavigate()
     const [formData, setFormData] = useState({
         username: '',
@@ -37,7 +38,7 @@ function Register() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+console.log(formData.userunit);
         // Kiểm tra các trường có bị bỏ trống không
         if (!formData.username || !formData.fullname || !formData.password || !formData.confirmPassword || !formData.userunit) {
             toast.error("Vui lòng nhập đầy đủ thông tin các trường bắt buộc!", {
@@ -58,7 +59,7 @@ function Register() {
                 username: formData.username,
                 fullname: formData.fullname,
                 password: formData.password,
-                unitcode: formData.unitcode
+                unitcode: formData.userunit
             });
             if (response.status === 400) {
                 toast.warning(response.message)
@@ -105,6 +106,21 @@ function Register() {
         }
     }, [formData.password, formData.confirmPassword]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const unitResponse = await axios.get('/api/common/unitAll', {params: {unitCode: ''}});
+
+                setUnits(unitResponse.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <div className={cx('register')}>
             <div className={cx('register_form')}>
@@ -135,11 +151,9 @@ function Register() {
                                 <select name="userunit" asp-for="Input.UserName" className="form-control" required onChange={handleChange}>
                                     <optgroup label="Chọn đơn vị">
                                         <option hidden>--- Chọn đơn vị ---</option>
-                                        <option value="1">Đơn vị 1</option>
-                                        <option value="2">Đơn vị 2</option>
-                                        <option value="3">Đơn vị 3</option>
-                                        <option value="4">Đơn vị 4</option>
-                                        <option value="5">Đơn vị 5</option>
+                                        {units?.map((item, index) => (
+                                            <option key={index} value={item.ID}>{item.UnitName}</option>
+                                        ))}
                                     </optgroup>
                                 </select>
                                 <label asp-for="Input.UserName">Đơn vị <i className="text-danger">*</i></label>
