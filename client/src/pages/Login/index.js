@@ -25,7 +25,8 @@ function Login() {
             const response = await axios.post('/api/login', { username, password });
             
             if (response.status === 200) {
-                dispatch(setIsAdmin(response.data.data === null ? true : false)); // Cập nhật trạng thái người dùng đăng nhập là admin hay không
+                localStorage.setItem('isAdmin', response.data.data === null);
+                // dispatch(setIsAdmin(response.data.data === null)); // Cập nhật trạng thái người dùng đăng nhập là admin hay không
                 dispatch(setSelectValueUnit(response.data.data));
                 navigate(config.home); // Điều hướng đến trang chính sau khi đăng nhập thành công
             }
@@ -45,6 +46,12 @@ function Login() {
         }
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+          handleLogin();
+        }
+      };
+
     return (
         <main className="main-login">
             <div className="login-box">
@@ -52,7 +59,7 @@ function Login() {
                     <div className="col-12 col-md-6 align-self-center">
                         <div className="d-flex flex-column align-items-center logo mx-auto text-center">
                             <img src={logo} alt="" />
-                            <label className="mt-2"><span style={{ fontSize: '22px', color: '#0008A0' }}>Đơn vị</span></label>
+                            <label className="mt-2"><span style={{ fontSize: '22px', color: '#0008A0' }}></span></label>
                         </div>
                     </div>
 
@@ -78,6 +85,7 @@ function Login() {
                                                     placeholder="Tên đăng nhập"
                                                     value={username}
                                                     onChange={(e) => setUsername(e.target.value)}
+                                                    onKeyDown={handleKeyDown}
                                                 />
                                                 <span asp-validation-for="Input.UserName" className="text-danger"></span>
                                             </div>
@@ -97,6 +105,7 @@ function Login() {
                                                     placeholder="Mật khẩu"
                                                     value={password}
                                                     onChange={(e) => setPassword(e.target.value)}
+                                                    onKeyDown={handleKeyDown}
                                                 />
                                                 <span asp-validation-for="Input.Password" className="text-danger"></span>
                                             </div>
@@ -116,7 +125,7 @@ function Login() {
                 </div>
 
                 <div className="text-end">
-                    <p className="text-uppercase text-center m-0">Phần mềm giám sát và quản lý trạm từ xa</p>
+                    <p className="text-uppercase text-center fw-bold m-0">PHẦN MỀM QUẢN LÝ, GIÁM SÁT VÀ ĐIỀU KHIỂN TỪ XA</p>
                 </div>
             </div>
             <ToastContainer />

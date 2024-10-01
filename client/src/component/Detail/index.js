@@ -11,6 +11,7 @@ import { cam1, cam2, cam3, cam4 } from '~/assets/images';
 import CameraPopup from '~/component/Popup/Camera';
 import { statusClasses } from "~/common/statusClasses";
 import TabsContainer from '../Tabs/TabsContainer';
+import DatePickers from '../DateTimePickers';
 
 const cx = classNames.bind(styles);
 
@@ -20,14 +21,16 @@ const cameras = [
     { label: 'Cam 3', imageSrc: cam3, altText: 'Camera 3' },
     { label: 'Cam 4', imageSrc: cam4, altText: 'Camera 4' }
 ];
+
 function Detail({ data }) {
+    const [selectedDate, setSelectedDate] = useState(null);
     const [imgModal, setImgModal] = useState(null);
     const [dataMucNuoc, setDataMucNuoc] = useState(null);
     const [dataLuuLuongNuoc, setDataLuuLuongNuoc] = useState(null);
     const [dataTrangThai, setDataTrangThai] = useState({ device1: [], device2: [], totaltime: [] });
     const tabs = ['Thời gian bơm hoạt động', 'Lưu lượng nước', 'Mực nước'];
     const panels = [
-        <ChartBar key="bar" data={dataTrangThai} type={data[0]?.NameStation === 'e66/Sư đoàn 10' ? 2 : 1}/>,
+        <ChartBar key="bar" data={dataTrangThai} type={data[0]?.NameStation === 'e66/Sư đoàn 10' ? 2 : 1} />,
         <ChartBarLuuLuongNuoc key="bar" data={dataLuuLuongNuoc} />,
         <ChartLine data={dataMucNuoc} />
     ];
@@ -35,13 +38,13 @@ function Detail({ data }) {
     const handleOpenModal = useCallback((img) => {
         setImgModal(img);
     }, []);
-    const getCurrentDate = () => {
-        const today = new Date();
-        const day = String(today.getDate()).padStart(2, '0');
-        const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
-        const year = today.getFullYear();
-        return `${year}-${month}-${day}`;
-    };
+    // const getCurrentDate = () => {
+    //     const today = new Date();
+    //     const day = String(today.getDate()).padStart(2, '0');
+    //     const month = String(today.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0 nên cần +1
+    //     const year = today.getFullYear();
+    //     return `${year}-${month}-${day}`;
+    // };
 
     const fetchData = async (date) => {
 
@@ -68,17 +71,23 @@ function Detail({ data }) {
             console.error('Lỗi khi fetch dữ liệu:', err);
         }
     };
-    useEffect(() => {
-        const currentDate = getCurrentDate();
-        fetchData(currentDate);
-        // Thiết lập interval để gọi API mỗi 10 phút
-        const intervalId = setInterval(() => {
-            fetchData(currentDate);
-        }, 600000);
 
-        // Cleanup function khi component unmount
-        return () => clearInterval(intervalId);
-    }, []);
+    // Hàm nhận giá trị ngày từ ControlledComponent
+    const handleDateChange = (date) => {
+        fetchData(date.format('YYYY-MM-DD'));
+        setSelectedDate(date ? date.format('YYYY-MM-DD') : '');
+    };
+
+    useEffect(() => {
+        if (selectedDate) {
+            const interval = setInterval(() => {
+                fetchData(selectedDate);
+            }, 60000); // 1 phút
+
+            // Cleanup interval khi component unmount hoặc selectedDate thay đổi
+            return () => clearInterval(interval);
+        }
+    }, [selectedDate]);
 
     return (
         <>
@@ -86,10 +95,15 @@ function Detail({ data }) {
                 <div className="mb-3">
                     <div className="">
                         <div className="d-flex align-items-center">
-                            <div className={`d-flex col-10 fw-bold ${cx('device-info')}`}>
+                            <div className={`d-flex col-7 fw-bold ${cx('device-info')}`}>
                                 {/* <span className={cx('device-index')}>{idx + 1}</span> */}
                                 <span className="ms-2 fs-5">{data[0]?.NameStation}</span>
                                 {/* <span className="ms-2"> - 17/07/2024 - 03:52</span> */}
+                            </div>
+                            <div className='col-3'>
+                                <div>
+                                    <DatePickers onDateChange={handleDateChange} />
+                                </div>
                             </div>
                             <div className='col-2 d-flex justify-content-between'>
                                 <button className="btn btn-light p-2 border rounded">

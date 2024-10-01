@@ -17,9 +17,11 @@ function Sidebar() {
     const [units, setUnits] = useState([]);
     const [fields, setFields] = useState([]);
     const unitValue = useSelector((state) => state.select.selectValueUnit);
-    const isAdmin = useSelector((state) => state.select.isAdmin);
+    // const isAdmin = useSelector((state) => state.select.isAdmin);
+    const isAdmin = localStorage.getItem('isAdmin') === 'true';
 
     useEffect(() => {
+
         const fetchData = async () => {
             try {
                 const [unitResponse, fieldResponse] = await Promise.all([
@@ -51,7 +53,7 @@ function Sidebar() {
             <div className={cx('logo')}>
                 <img src={logo} alt="Logo" />
             </div>
-            <div className="d-flex flex-column">
+            <div className="d-flex flex-column position-relative" style={{height: 'calc(100% - 110px)'}}>
                 <aside className={cx('sidebar-nav', 'select')}>
                     <div className='mb-2 text-start'>
                         <label className='fw-bold fs-6 text-light'>Đơn vị</label>
@@ -78,7 +80,7 @@ function Sidebar() {
                                 className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
                             >
                                 <i className="fas fa-tachometer-alt"></i>
-                                <span className={cx('title')}>Giám sát tổng quan</span>
+                                <span className={cx('title')}>Giám sát</span>
                             </NavLink>
                         </nav>
                         <nav>
@@ -86,8 +88,17 @@ function Sidebar() {
                                 to={config.location}
                                 className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
                             >
-                                <i className="fas fa-user"></i>
+                                <i className="fa-solid fa-map-location-dot"></i>
                                 <span className={cx('title')}>Bản đồ</span>
+                            </NavLink>
+                        </nav>
+                        <nav>
+                            <NavLink
+                                to={config.statistics}
+                                className={(nav) => cx('sidebar-nav-link', { active: nav.isActive})}
+                            >
+                                <i className="fa-solid fa-chart-line"></i>
+                                <span className={cx('title')}>Thống kê</span>
                             </NavLink>
                         </nav>
                         {isAdmin && (
@@ -96,14 +107,25 @@ function Sidebar() {
                                     to={config.control}
                                     className={(nav) => cx('sidebar-nav-link', { active: nav.isActive })}
                                 >
-                                    <i className="fas fa-user"></i>
+                                    <i className="fa-solid fa-sliders"></i>
                                     <span className={cx('title')}>Điều khiển</span>
                                 </NavLink>
                             </nav>
                         )}
                     </div>
                 </aside>
-
+                <aside className={`position-absolute bottom-0 w-100 ${cx('sidebar-nav', 'select')}`}>
+                    <div className='w-100'>
+                        <NavLink
+                            to={config.login}
+                            className={`w-100 d-block pt-1 pb-2 text-light text-start fw-bold ${cx('sidebar-nav-link', 'signout')}`}
+                            style={{padding: '0 24px'}}
+                        >
+                            <i className="fa-solid fa-right-to-bracket"></i>
+                            <span className={cx('title')}>Đăng xuất</span>
+                        </NavLink>
+                    </div>
+                </aside>
             </div>
         </div>
     )
