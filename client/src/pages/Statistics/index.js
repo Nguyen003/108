@@ -3,22 +3,25 @@ import classNames from "classnames/bind";
 import React, { useEffect, useState, useCallback } from 'react';
 import axios from "axios";
 import { useSelector } from 'react-redux';
+import moment from 'moment';
+import 'moment/locale/vi';
+import { DateRangePicker } from 'rsuite';
 
-import styles from "./Location.module.scss";
-// import Map from "~/component/Map";
-// import { listLocations } from '~/services/LocationsServices';
+import styles from "./Statistics.module.scss";
+import { ChartBarThongKe } from '~/component/Chart';
 import Accordion from 'react-bootstrap/Accordion';
-import imageMapping from '~/common/imgMapping'
 
 const cx = classNames.bind(styles);
 
 function Location() {
-    const [imgLocation, setImgLocation] = useState();
     const [stations, setStations] = useState();
     const [dataDevice, setDataDevice] = useState();
     const [deviceTotal, setDeviceTotal] = useState();
+    const [dataByDay, setDataByDay] = useState({ label: [], device1: [], device2: [], totaltime: [] });
     const unitValue = useSelector((state) => state.select.selectValueUnit);
     const fieldValue = useSelector((state) => state.select.selectValueField);
+    const startOfWeek = moment().startOf('week').add(1, 'days').toDate(); // Thứ Hai
+    const endOfWeek = new Date(); // Ngày hiện tại
 
     const fetchData = async () => {
         try {
@@ -26,7 +29,8 @@ function Location() {
                 params: { unit: unitValue, field: fieldValue }
             });
             const dataDeviceResponse = await axios.get('/api/common/location');
-            console.log(stationsResponse.data.filter(x => x.StationCode === '03')[0])
+            // console.log(stationsResponse.data.filter(x => x.StationCode === '03')[0])
+
             setStations(stationsResponse.data);
             setDeviceTotal(stationsResponse.data[0]);
             setDataDevice(dataDeviceResponse.data);
@@ -34,37 +38,58 @@ function Location() {
             if (stationsResponse.data.length > 0) {
                 const firstStation = stationsResponse.data[0];
                 setActiveButton(firstStation.StationName);
-                setImgLocation(firstStation.Location);
             }
         } catch (err) {
             console.error('Error fetching stations:', err);
         }
     };
 
+    const fetchDataBieuDo = async (dateStart, dateEnd) => {
+        try {
+            const dataDeviceByDay = await axios.get('/api/common/statistics', {
+                params: { dateStart: dateStart, dateEnd: dateEnd }
+            });
+
+            const device1 = dataDeviceByDay.data.map(x => x.device1);
+            const device2 = dataDeviceByDay.data.map(x => x.device2);
+            const totaltime = dataDeviceByDay.data.map(x => x.totaltime);
+            const lable = dataDeviceByDay.data.map(x => x.TimeDay);
+
+            setDataByDay({ label: lable, device1: device1, device2: device2, totaltime: totaltime });
+        } catch (err) {
+            console.error('Error fetching stations:', err);
+        }
+    }
+
     const [activeButton, setActiveButton] = useState(null);
     const handleButtonClick = useCallback((data) => {
         setDeviceTotal(stations.filter(x => x.StationCode === data.StationCode)[0]);
         setActiveButton(data.StationName);
-        setImgLocation(data.Location)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stations]); // Chỉ tạo lại hàm khi component mount
 
     useEffect(() => {
         fetchData();
+        fetchDataBieuDo(moment(startOfWeek).format('YYYY-MM-DD'), moment(endOfWeek).format('YYYY-MM-DD'));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [unitValue, fieldValue])
 
+    /// DateRangePicker 
+    const handleDateChange = (date) => {
+        if(date){
+            fetchDataBieuDo(moment(date[0]).format('YYYY-MM-DD'), moment(date[1]).format('YYYY-MM-DD'));
+        }
+    };
+
     return (
-        <div className='d-flex'>
-            <div className="position-relative flex-grow-1">
-                {/* <Map lat={lat} lon={lon} zoom={10} data={machines} mapEvent={updateVisibleMachines} setMap={setMap} /> */}
-                <img className="w-100 object-fit-cover" src={imageMapping[imgLocation]} alt='bản đồ' style={{ height: '100vh', }} />
-                {/* <div className='d-flex align-items-center position-absolute status-bar top-0 right-0'>
-                    <span className="status-item signal-lost">Mất tín hiệu</span>
-                    <span className="status-item threshold-exceeded">Lỗi</span>
-                    <span className="status-item threshold-warning">Dừng hoạt động</span>
-                    <span className="status-item within-threshold">Đang hoạt động</span>
-                </div> */}
+        <div className='d-flex' style={{ height: '100vh' }}>
+            <div className="d-flex flex-column w-100">
+                <div className="d-flex justify-content-end pt-2">
+                    <DateRangePicker format="dd/MM/yyyy" character=" – " onChange={handleDateChange} defaultValue={[startOfWeek, endOfWeek]} />
+                </div>
+                <div className="position-relative flex-grow-1">
+                    <ChartBarThongKe data={dataByDay} type={activeButton === 'e66/Sư đoàn 10' ? 2 : 1} />
+                </div>
             </div>
             <div className="col-3 pt-2 ps-2 pe-2">
                 <div>
@@ -114,7 +139,7 @@ function Location() {
                             </div>
                             <Accordion defaultActiveKey="0" className={cx("accordion-container")}>
                                 <Accordion.Item eventKey="0">
-                                    <Accordion.Header className={cx("header-list")}>Nước sạch</Accordion.Header>
+                                    <Accordion.Header className={cx('header-list')}>Nước sạch</Accordion.Header>
                                     <Accordion.Body>
                                         <div className={`list-group list-group-flush ${cx('button-group')}`}>
                                             {stations?.map((item, index) => (

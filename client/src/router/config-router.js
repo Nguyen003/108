@@ -3,7 +3,8 @@ const router = {
     register: '/register',
     home: '/home',
     location: '/location',
-    control: '/control'
+    control: '/control',
+    statistics: '/statistics',
 }
 
 export default router;

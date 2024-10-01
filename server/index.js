@@ -113,7 +113,7 @@ const serverTCP = net.createServer((socket) => {
         parseData[1] = parseData[1].substring(1, 5);
         parseData[2] = parseData[2].substring(1);
         latestParseData = parseData;
-        console.log(parseData);
+        // console.log(parseData);
 
         if (ValueOfAllLights.LIGHT_1.allValues.includes(parseData[0])) {
             console.log('den 1')

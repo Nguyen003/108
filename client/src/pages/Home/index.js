@@ -26,13 +26,11 @@ function Home() {
             const stationsData = response.data;
             setStations(stationsData);
             if(selectedStationIdRef.current === null) {
-                console.log('Lần đâu: ', selectedStationIdRef.current);
                 const firstStationId = stationsData?.[0]?.StationCode ?? null;
                 fetchDevices(firstStationId); // Lấy thiết bị cho trạm đầu tiên
             }
 
             if(selectedStationIdRef.current != null) {
-                console.log('cập nhật: ', stationsData.some(station => station.StationCode === selectedStationIdRef.current));
                 fetchDevices(selectedStationIdRef.current); // Lấy thiết bị cho trạm đầu tiên
             }
         } catch (err) {

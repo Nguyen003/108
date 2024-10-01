@@ -214,10 +214,10 @@ function Control() {
                                 </div>
                                 <div className="col-8">
                                     <div className="d-flex pe-2">
-                                        <button className="btn btn-primary ms-2" onClick={() => handleOnOffLight('LIGHT_1')}>
+                                        <button className={`btn btn-primary ms-2 ${light1Status === 'Tắt' ? 'threshold-warning' : 'within-threshold'}`} onClick={() => handleOnOffLight('LIGHT_1')}>
                                             {light1Status === 'Tắt' ? 'Bật' : 'Tắt'} bơm 1
                                         </button>
-                                        <button className="btn btn-primary ms-2" onClick={() => handleOnOffLight('LIGHT_2')}>
+                                        <button className={`btn btn-primary ms-2 ${light1Status === 'Tắt' ? 'within-threshold' : 'threshold-warning'}`} onClick={() => handleOnOffLight('LIGHT_2')}>
                                             {light2Status === 'Tắt' ? 'Bật' : 'Tắt'} bơm 2
                                         </button>
                                     </div>

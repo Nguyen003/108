@@ -4,6 +4,7 @@ import db from '../Dbcontext.js'
 import { GET_ALL_FIELDS } from '../query/fieldQuery.js'
 import { GET_ALL_UNIT } from '../query/unitQuery.js'
 import { INSERT_TABLE_DEVICEDATA, GET_MUCNC_LUULUONG } from '../query/commonQueries.js'
+import { GET_DATA_DEVICE_USAGE_BY_DAY } from '../query/statisticsQuery.js'
 
 export const getAllUnit = async (req, res) => {
     const { unitCode } = req.query;
@@ -92,7 +93,7 @@ export const insertDeviceData = (data) => {
 // Hàm để thực hiện thao tác update
 const updateDeviceStatus = (deviceID, status) => {
     return new Promise((resolve, reject) => {
-        const updateQuery = `UPDATE Devices SET Status = ? WHERE DeviceID = ?`;
+        const updateQuery = `UPDATE Devices SET Status = ? WHERE DeviceCode = ?`;
         db.run(updateQuery, [status, deviceID], (err) => {
             if (err) {
                 console.log(err.message);
@@ -103,3 +104,25 @@ const updateDeviceStatus = (deviceID, status) => {
         });
     });
 };
+
+// biểu đồ trang thống kê
+export const getDataDeviceUsageByDay = async (req, res) => {
+    const { dateStart, dateEnd } = req.query;
+
+    try {
+        const data = await new Promise((resolve, reject) => {
+            db.all(GET_DATA_DEVICE_USAGE_BY_DAY, [dateStart, dateEnd, dateStart, dateEnd], (err, rows) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(rows);
+            });
+        });
+
+        res.status(200).json(data);
+    } catch (err) {
+        console.error('getMucNCLuuLuong_commonController:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}

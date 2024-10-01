@@ -9,6 +9,11 @@ import sodo from './so_do.jpg';
 import bgLogin from './bg_login.svg';
 import imgKontum from './location-kontum.png';
 import imgPleiku from './location-pleiku.png';
+import locationDakPo from './Đắk Pơ-Gia Lai.png';
+import locationEaHLeo from './Ea HLeo-DakLak.png';
+import locationMangYang from './Mang Yang-Gia Lai.png';
+import locationTuyPhuong from './Tuy Phước-Bình Định.png';
+
 
 export {
     cam1,
@@ -21,5 +26,9 @@ export {
     sodo,
     bgLogin,
     imgKontum,
-    imgPleiku
+    imgPleiku,
+    locationDakPo,
+    locationEaHLeo,
+    locationMangYang,
+    locationTuyPhuong
 }

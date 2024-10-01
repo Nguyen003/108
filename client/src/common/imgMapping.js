@@ -1,8 +1,12 @@
-import { imgKontum, imgPleiku } from "~/assets/images";
+import * as images from "~/assets/images";
 
 const imageMapping = {
-    'imgKontum': imgKontum,
-    'imgPleiku': imgPleiku,
+    'imgKontum': images.imgKontum,
+    'imgPleiku': images.imgPleiku,
+    'locationDakPo': images.locationDakPo,
+    'locationEaHLeo': images.locationEaHLeo,
+    'locationMangYang': images.locationMangYang,
+    'locationTuyPhuong': images.locationTuyPhuong
 };
 
 export default imageMapping
