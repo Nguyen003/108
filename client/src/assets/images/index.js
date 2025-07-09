@@ -13,7 +13,7 @@ import locationDakPo from './Đắk Pơ-Gia Lai.png';
 import locationEaHLeo from './Ea HLeo-DakLak.png';
 import locationMangYang from './Mang Yang-Gia Lai.png';
 import locationTuyPhuong from './Tuy Phước-Bình Định.png';
-
+import logoAme from './logoAME1103-10.png';
 
 export {
     cam1,
@@ -30,5 +30,6 @@ export {
     locationDakPo,
     locationEaHLeo,
     locationMangYang,
-    locationTuyPhuong
+    locationTuyPhuong,
+    logoAme
 }

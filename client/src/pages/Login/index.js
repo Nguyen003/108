@@ -8,9 +8,9 @@ import { useDispatch } from 'react-redux';
 
 import '~/assets/css/util.css';
 import './Login.scss'
-import { logo } from '~/assets/images'
+import { logoAme } from '~/assets/images'
 import config from '~/router/config-router'
-import { setSelectValueUnit, setIsAdmin } from '~/store';
+import { setSelectValueUnit } from '~/store';
 
 // const cx = classNames.bind(styles)
 
@@ -23,7 +23,7 @@ function Login() {
     const handleLogin = async () => {
         try {
             const response = await axios.post('/api/login', { username, password });
-            
+
             if (response.status === 200) {
                 localStorage.setItem('isAdmin', response.data.data === null);
                 // dispatch(setIsAdmin(response.data.data === null)); // Cập nhật trạng thái người dùng đăng nhập là admin hay không
@@ -48,9 +48,9 @@ function Login() {
 
     const handleKeyDown = (e) => {
         if (e.key === 'Enter') {
-          handleLogin();
+            handleLogin();
         }
-      };
+    };
 
     return (
         <main className="main-login">
@@ -58,7 +58,7 @@ function Login() {
                 <div className="row">
                     <div className="col-12 col-md-6 align-self-center">
                         <div className="d-flex flex-column align-items-center logo mx-auto text-center">
-                            <img src={logo} alt="" />
+                            <img src={logoAme} alt="" />
                             <label className="mt-2"><span style={{ fontSize: '22px', color: '#0008A0' }}></span></label>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ function Login() {
                                                 <span asp-validation-for="Input.Password" className="text-danger"></span>
                                             </div>
                                         </div>
-                                        <div className="col-12 text-end" style={{marginTop: '-10px'}}>
+                                        <div className="col-12 text-end" style={{ marginTop: '-10px' }}>
                                             <Link className='fst-italic text-decoration-underline fs-6' to={config.register}>Đăng ký!</Link>
                                         </div>
 

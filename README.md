@@ -3,8 +3,7 @@
 For Production:
 ```
 $ cd server
-$ npm install
-$ node server.js
+$ npm install && node server.js
 ```
 For Development:
 ```

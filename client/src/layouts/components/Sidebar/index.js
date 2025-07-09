@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 
 import styles from './Sidebar.module.scss'
 import config from '~/router/config-router'
-import logo from '~/assets/images/logo.png'
+import logo from '~/assets/images/logoAME1103-10.png'
 import { setSelectValueUnit, setSelectValueField } from '~/store';
 
 const cx = classNames.bind(styles);
