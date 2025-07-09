@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
 });
 
 // TCP
-let latestParseData = null;
+// let latestParseData = null;
 const serverTCP = net.createServer((socket) => {
     TcpConnections.push(socket);
 
@@ -112,7 +112,7 @@ const serverTCP = net.createServer((socket) => {
         const parseData = data.toString().substring(0, 20).match(/#.*?(?=#|$)/g);
         parseData[1] = parseData[1].substring(1, 5);
         parseData[2] = parseData[2].substring(1);
-        latestParseData = parseData;
+        // latestParseData = parseData;
         // console.log(parseData);
 
         if (ValueOfAllLights.LIGHT_1.allValues.includes(parseData[0])) {
@@ -153,11 +153,54 @@ serverTCP.listen(PORT_TCP, () => {
     console.log('listening TCP on port', PORT_APP);
 });
 
-setInterval(async() => {
+// setInterval(async() => {
+//     try {
+//         await insertDeviceData(latestParseData);
+//         console.log('Save data successfully every 60s.')
+//     } catch (err) {
+//         console.error('Save data error every 60s:', err)
+//     }
+// }, 60000)
+
+
+
+////// giỏ lập dữ liêu 
+let latestParseData = ['#00000001', '9.26', '2.30'];
+let toggleFlag = true; // Biến để xác định trạng thái
+
+// Hàm random thời gian từ 1 phút đến 60 phút
+function getRandomTime() {
+    const min = 60000; // 1 phút
+    const max = 3600000; // 60 phút
+    return Math.floor(Math.random() * (max - min + 1)) + min; // Random từ 1 phút đến 60 phút
+}
+
+// Hàm thay đổi giá trị device ID
+function toggleDeviceId() {
+    latestParseData[0] = toggleFlag ? '#00000010' : '#00000001';
+    toggleFlag = !toggleFlag; // Đổi trạng thái
+    console.log('Device ID toggled:', latestParseData[0]);
+}
+
+// Hàm đặt lại interval với thời gian random mới
+function scheduleRandomToggle() {
+    const randomTime = getRandomTime();
+    console.log(`Next toggle in: ${(randomTime / 60000).toFixed(2)} minutes`);
+    setTimeout(() => {
+        toggleDeviceId();
+        scheduleRandomToggle(); // Gọi lại để tiếp tục đặt thời gian random mới
+    }, randomTime);
+}
+
+// Khởi tạo việc random toggle device ID
+scheduleRandomToggle();
+
+// Đoạn lưu dữ liệu 60 giây một lần
+setInterval(async () => {
     try {
         await insertDeviceData(latestParseData);
-        console.log('Save data successfully every 60s.')
+        console.log('Save data successfully every 60s.');
     } catch (err) {
-        console.error('Save data error every 60s:', err)
+        console.error('Save data error every 60s:', err);
     }
-}, 60000)
+}, 60000);

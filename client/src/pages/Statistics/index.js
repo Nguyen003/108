@@ -20,7 +20,7 @@ function Location() {
     const [dataByDay, setDataByDay] = useState({ label: [], device1: [], device2: [], totaltime: [] });
     const unitValue = useSelector((state) => state.select.selectValueUnit);
     const fieldValue = useSelector((state) => state.select.selectValueField);
-    const startOfWeek = moment().startOf('week').add(1, 'days').toDate(); // Thứ Hai
+    const startOfWeek = moment().startOf('isoWeek').toDate(); // Thứ Hai
     const endOfWeek = new Date(); // Ngày hiện tại
 
     const fetchData = async () => {
@@ -69,6 +69,7 @@ function Location() {
     }, [stations]); // Chỉ tạo lại hàm khi component mount
 
     useEffect(() => {
+        console.log("start: " + startOfWeek + "; End:" + endOfWeek)
         fetchData();
         fetchDataBieuDo(moment(startOfWeek).format('YYYY-MM-DD'), moment(endOfWeek).format('YYYY-MM-DD'));
         // eslint-disable-next-line react-hooks/exhaustive-deps
